@@ -1,0 +1,24 @@
+{
+  "name": "tasktreemap",
+  "version": "1.0.0",
+  "description": "タスクの規模と進捗を可視化する html",
+  "main": "main.js",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "webpack": "^2.2.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/volpe28v/TaskTreemap.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/volpe28v/TaskTreemap/issues"
+  },
+  "homepage": "https://github.com/volpe28v/TaskTreemap#readme"
+}
