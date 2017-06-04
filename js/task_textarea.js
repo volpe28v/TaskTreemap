@@ -21,12 +21,12 @@ var taskTextarea = Vue.component('task-textarea',{
       "タスク2 40 Todo",
       "タスク3 50 Todo",
       "タスク4 60 Todo",
-      "タスク5 70 Doing",
+      "タスク5 70 Doing Aさん",
       "タスク6 80 Done",
       "タスク7 55 Todo",
       "タスク8 45 Doing",
       "タスク9 35 Done",
-      "タスク10 90 Done",
+      "タスク10 90 Done Bさん",
     ].join("\n");
 
   },
@@ -40,7 +40,7 @@ var taskTextarea = Vue.component('task-textarea',{
         "children": null
       }
 
-      var rowReg = /(\S+)[ ¥t]+([\d\.]+)([ ¥t]+(\w+))?/;
+      var rowReg = /(\S+)[ ¥t]+([\d\.]+)([ ¥t]+(\S+))?([ ¥t]+(\S+))?/;
       var children = self.text.split("\n")
         .filter(function(row){
           var matched = row.match(rowReg);
@@ -51,11 +51,13 @@ var taskTextarea = Vue.component('task-textarea',{
           return {
             "name": matched[1],
             "size": Number(matched[2]),
-            "status": matched[4] ? matched[4] : "Todo"
+            "status": matched[4] ? matched[4] : "Todo",
+            "assignee": matched[6]
           }
         });
 
       tasks.children = children;
+
       self.$emit('update-tasks',
         {
           tasks: tasks
