@@ -63,9 +63,12 @@ var taskTreemap = Vue.component('task-treemap',{
         .style("overflow", "hidden")
         .style("border", "solid 1px white")
         .style("padding", "0px")
-        .text(function(d) { 
+        .html(function(d) {
           if (d.children){ return ""; }
-          return d.name;
+          return [
+            '<div class="task-name">' + d.name + '</div>',
+            '<div class="task-size">' + d.size + '</div>',
+          ].join("");
         });
     }
   }
