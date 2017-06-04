@@ -1,5 +1,5 @@
 var taskTextarea = Vue.component('task-textarea',{
-  template: '<textarea v-model="text" placeholder="add multiple lines"></textarea>',
+  template: '<textarea v-model="text" placeholder="Title 30 Todo/Doing/Done Assignee"></textarea>',
 
   props: [],
 
