@@ -40,7 +40,7 @@ var taskTextarea = Vue.component('task-textarea',{
         "children": null
       }
 
-      var rowReg = /(\S+)[ ¥t]+([\d\.]+)([ ¥t]+(\S+))?([ ¥t]+(\S+))?/;
+      var rowReg = /(\S+)[ \t]+([\d\.]+)([ \t]+(\S+))?([ \t]+(\S+))?/;
       var children = self.text.split("\n")
         .filter(function(row){
           var matched = row.match(rowReg);

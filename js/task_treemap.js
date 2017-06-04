@@ -59,7 +59,7 @@ var taskTreemap = Vue.component('task-treemap',{
         })
         .style("position", "absolute")
         .style("overflow", "hidden")
-        .style("border", "solid 1px white")
+        .style("border", "solid 1px #333")
         .style("padding", "0px")
         .html(function(d) {
           if (d.children){
