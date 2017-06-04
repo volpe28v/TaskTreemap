@@ -10,13 +10,11 @@ new Vue({
 
   mounted: function(){
     var self = this;
-
     self.tasks = null;
   },
 
   methods: {
     updateTasks: function(params){
-      console.log(params.tasks);
       this.tasks = params.tasks;
     }
   }

@@ -1,5 +1,5 @@
 var taskTreemap = Vue.component('task-treemap',{
-  template: '<div id="myGraph">\
+  template: '<div id="treemap">\
 </div>',
 
   props: ['tasks'],
@@ -25,41 +25,47 @@ var taskTreemap = Vue.component('task-treemap',{
     update: function(){
       var self = this;
 
-      if (self.tasks == null){ return; }
-
-      var myNode = document.getElementById("myGraph");
+      // 一旦クリアする
+      var myNode = document.getElementById("treemap");
       while (myNode.firstChild) {
         myNode.removeChild(myNode.firstChild);
       }
 
-      var colorList = d3.scale.category10();  // 10色を指定
+      if (self.tasks == null ||
+          self.tasks.children == null ||
+          self.tasks.children.length == 0){ return; }
+
+      console.log(self.tasks);
+
+      var height = document.getElementById("treemap").clientHeight;
+      var width = document.getElementById("treemap").clientWidth;
 
       var treemap = d3.layout.treemap()
-        .size([480, 300])	// 横幅480px, 縦幅300px
+        .size([width, height])
         .value(function(d) { return d.size; });
 
-      d3.select("#myGraph")
-        .datum(self.tasks)	// データを割り付け
-        .selectAll("div")	// divに表示するボックスを割り当てる
-        .data(treemap.nodes)	// Treemapのノードを対象に処理
+      d3.select("#treemap")
+        .datum(self.tasks)
+        .selectAll("div")
+        .data(treemap.nodes)
         .enter()
-        .append("div")	// div要素を追加
-        .style("left", function(d) { return d.x + "px"; })	// 表示する座標と幅などを設定
+        .append("div")
+        .style("left", function(d) { return d.x + "px"; })
         .style("top", function(d) { return d.y + "px"; })
-        .style("width", function(d) { return d.dx + "px"; })
-        .style("height", function(d) { return d.dy + "px"; })
+        .style("width", function(d) { return d.dx-2 + "px"; })
+        .style("height", function(d) { return d.dy-2 + "px"; })
         .style("background", function(d, i){
-          if (d.status == "Done"){ return colorList(0); }
-          if (d.status == "Doing"){ return colorList(1); }
-          if (d.status == "Todo"){ return colorList(2); }
-          return colorList(0);	// あらかじめ用意されたカラーを返す
+          if (d.status == "Done"){ return "rgb(199, 199, 199)"; }
+          if (d.status == "Doing"){ return "rgb(174, 199, 232)"; }
+          return "rgb(152, 223, 138)"; //Todo or other
         })
         .style("position", "absolute")
         .style("overflow", "hidden")
-        .style("border", "solid 2px white")
+        .style("border", "solid 1px white")
+        .style("padding", "0px")
         .text(function(d) { 
-          if (d.children){ return ""; }	// 子ノードがある場合は親ノードの名前を表示しない
-          return d.name;	// 名前を返す
+          if (d.children){ return ""; }
+          return d.name;
         });
     }
   }

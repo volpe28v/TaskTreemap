@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>MeshViewer</title>
+    <title>TaskTreemap</title>
     <script type="text/javascript"src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD06ErexK0u1vnaXGci0_JuuwCm2jkN36s&libraries=visualization"></script>
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="https://unpkg.com/vue"></script>
@@ -9,23 +9,39 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-			#myGraph {
-				position: relative;
-				width : 480px;
-				height : 300px;
-			}
-
-      body {
-        background-color: black;
-        color: deepskyblue;
+      html,body {
+        height: 100%;
+        margin: 0px;
       }
 
+			#treemap{
+				position: relative;
+				width : 100%;
+				height : 100%;
+			}
+
+      #app {
+        display: flex;
+        height: 100%;
+      }
+
+      .leftpane {
+        flex: 2;
+        display: flex;
+        flex-direction: column;
+      }
+
+      textarea {
+        font-family: Osaka-mono, "Osaka-等幅", "ＭＳ ゴシック", monospace;
+        font-size: 14px;
+        flex: 1;
+        padding: 8px;
+      }
     </style>
   </head>
   <body>
     <div id="app">
-      <h4>Task Treemap</h4>
-      <task-treemap :tasks="tasks"></task-treemap>
+      <task-treemap class="leftpane" :tasks="tasks"></task-treemap>
       <task-textarea v-on:update-tasks="updateTasks"></task-treemap>
     </div>
 
