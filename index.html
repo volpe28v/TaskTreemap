@@ -13,9 +13,8 @@
   <body>
     <div id="app">
       <task-treemap class="leftpane" :tasks="tasks"></task-treemap>
-      <task-textarea v-on:update-tasks="updateTasks"></task-treemap>
+      <task-textarea class="rightpane" v-on:update-tasks="updateTasks"></task-treemap>
     </div>
-
     <script type="text/javascript" src="dist/bundle.js">
     </script>
   </body>
