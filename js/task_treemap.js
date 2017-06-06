@@ -61,6 +61,9 @@ var taskTreemap = Vue.component('task-treemap',{
         .style("overflow", "hidden")
         .style("border", "solid 1px #333")
         .style("padding", "0px")
+        .on("click",function(d){
+          console.log(d);
+        })
         .html(function(d) {
           if (d.children){
             return "";
@@ -68,7 +71,7 @@ var taskTreemap = Vue.component('task-treemap',{
             return [
               '<div class="task-name">' + d.name + '</div>',
               '<div class="task-size">' + d.size + '</div>',
-              '<div class="task-assignee">' + (d.assignee ? d.assignee : "") + '</div>',
+              d.assignee ? '<div><span class="task-assignee">' + d.assignee + '</span></div>' : "",
             ].join("");
           }
         });
