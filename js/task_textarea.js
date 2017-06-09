@@ -32,13 +32,13 @@ var taskTextarea = Vue.component('task-textarea',{
     this.text = [
       "タスク1 30 Todo",
       "タスク2 40 Todo",
-      "タスク3 50 Todo",
+      "タスク3 50 Todo Cさん",
       "タスク4 60 Todo",
       "タスク5 70 Doing Aさん",
       "タスク6 80 Done",
-      "タスク7 55 Todo",
+      "タスク7 55 Todo Aさん",
       "タスク8 45 Doing",
-      "タスク9 35 Done",
+      "タスク9 35 Done Cさん",
       "タスク10 90 Done Bさん",
     ].join("\n");
   },
