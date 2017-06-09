@@ -6,6 +6,7 @@ var taskTreemap = Vue.component('task-treemap',{
 
   data: function(){
     return {
+      ColorMax: 9
     }
   },
 
@@ -20,6 +21,12 @@ var taskTreemap = Vue.component('task-treemap',{
       var self = this;
 
       self.update();
+    },
+
+    getColorNo: function(id){
+      var self = this;
+
+      return id % (self.ColorMax-1) + 1;
     },
 
     update: function(){
@@ -38,14 +45,15 @@ var taskTreemap = Vue.component('task-treemap',{
       var children = self.tasks.children;
 
       // assignee ごとに children を生成
-      var assignee_hash = { "": [] };
+      var assignee_hash = { "": { id: 0, children: [] }};
+      var assignee_id = 0;
       children.forEach(function(child){
         var assignee = child.assignee != null ? child.assignee : "";
 
         if (assignee_hash[assignee] == null){
-          assignee_hash[assignee] = [child];
+          assignee_hash[assignee] = { id: assignee_id++, children: [child]};
         }else{
-          assignee_hash[assignee].push(child);
+          assignee_hash[assignee].children.push(child);
         }
       });
        
@@ -54,7 +62,7 @@ var taskTreemap = Vue.component('task-treemap',{
         "children": Object.keys(assignee_hash).map(function(key){
           return {
             "name": key,
-            "children": assignee_hash[key]
+            "children": assignee_hash[key].children
           };
         })
       }
@@ -93,7 +101,7 @@ var taskTreemap = Vue.component('task-treemap',{
             return "";
           }else{
             return [
-              d.assignee ? '<div><span class="task-assignee">' + d.assignee + '</span></div>' : "",
+              d.assignee ? '<div><span class="task-assignee assignee-' + self.getColorNo(assignee_hash[d.assignee].id) + '">' + d.assignee + '</span></div>' : "",
               '<div class="task-name">' + d.name + '</div>',
               '<div class="task-size">' + d.size + '</div>',
             ].join("");
