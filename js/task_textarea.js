@@ -13,7 +13,7 @@ var taskTextarea = Vue.component('task-textarea',{
 
   data: function(){
     return {
-      sepaMode: "space",
+      sepaMode: "",
       text: ""
     }
   },
@@ -28,19 +28,29 @@ var taskTextarea = Vue.component('task-textarea',{
   },
 
   mounted: function(){
-    // デフォルトテキスト
-    this.text = [
-      "タスク1 30 Todo",
-      "タスク2 40 Todo",
-      "タスク3 50 Todo Cさん",
-      "タスク4 60 Todo",
-      "タスク5 70 Doing Aさん",
-      "タスク6 80 Done",
-      "タスク7 55 Todo Aさん",
-      "タスク8 45 Doing",
-      "タスク9 35 Done Cさん",
-      "タスク10 90 Done Bさん",
-    ].join("\n");
+    if (window.localStorage.text){
+      this.text = window.localStorage.text;
+    }else{
+      // デフォルトテキスト
+      this.text = [
+        "タスク1 30 Todo",
+        "タスク2 40 Todo",
+        "タスク3 50 Todo Cさん",
+        "タスク4 60 Todo",
+        "タスク5 70 Doing Aさん",
+        "タスク6 80 Done",
+        "タスク7 55 Todo Aさん",
+        "タスク8 45 Doing",
+        "タスク9 35 Done Cさん",
+        "タスク10 90 Done Bさん",
+      ].join("\n");
+    }
+
+    if (window.localStorage.sepaMode){
+      this.sepaMode = window.localStorage.sepaMode;
+    }else{
+      this.sepaMode = "space";
+    }
   },
 
   methods: {
@@ -56,6 +66,9 @@ var taskTextarea = Vue.component('task-textarea',{
 
     updateText: function(){
       var self = this;
+      window.localStorage.text = self.text;
+      window.localStorage.sepaMode = self.sepaMode;
+
       var rowReg = self.getReg();
 
       var tasks = {
