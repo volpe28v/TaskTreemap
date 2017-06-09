@@ -35,6 +35,30 @@ var taskTreemap = Vue.component('task-treemap',{
           self.tasks.children == null ||
           self.tasks.children.length == 0){ return; }
 
+      var children = self.tasks.children;
+
+      // assignee ごとに children を生成
+      var assignee_hash = { "": [] };
+      children.forEach(function(child){
+        var assignee = child.assignee != null ? child.assignee : "";
+
+        if (assignee_hash[assignee] == null){
+          assignee_hash[assignee] = [child];
+        }else{
+          assignee_hash[assignee].push(child);
+        }
+      });
+       
+      var tasks_node = {
+        "name": "root_dir",
+        "children": Object.keys(assignee_hash).map(function(key){
+          return {
+            "name": key,
+            "children": assignee_hash[key]
+          };
+        })
+      }
+
       var height = document.getElementById("treemap").clientHeight;
       var width = document.getElementById("treemap").clientWidth;
 
@@ -43,7 +67,7 @@ var taskTreemap = Vue.component('task-treemap',{
         .value(function(d) { return d.size; });
 
       d3.select("#treemap")
-        .datum(self.tasks)
+        .datum(tasks_node)
         .selectAll("div")
         .data(treemap.nodes)
         .enter()
@@ -69,9 +93,9 @@ var taskTreemap = Vue.component('task-treemap',{
             return "";
           }else{
             return [
+              d.assignee ? '<div><span class="task-assignee">' + d.assignee + '</span></div>' : "",
               '<div class="task-name">' + d.name + '</div>',
               '<div class="task-size">' + d.size + '</div>',
-              d.assignee ? '<div><span class="task-assignee">' + d.assignee + '</span></div>' : "",
             ].join("");
           }
         });

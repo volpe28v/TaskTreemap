@@ -59,7 +59,6 @@ var taskTextarea = Vue.component('task-textarea',{
       var rowReg = self.getReg();
 
       var tasks = {
-        "name": "root_dir",
         "children": null
       }
 
