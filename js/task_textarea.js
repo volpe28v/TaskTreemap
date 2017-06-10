@@ -1,6 +1,6 @@
 var taskTextarea = Vue.component('task-textarea',{
   template: '<div>\
-    <div class="task-info">{{ count }} tasks.</div>\
+    <div class="task-info">{{done_count}}/{{ count }} tasks. {{done_sizes}}/{{ sizes }} sizes.</div>\
     <textarea v-model="text" placeholder="Title 30 Todo/Doing/Done Assignee"></textarea>\
   </div>',
 
@@ -9,6 +9,14 @@ var taskTextarea = Vue.component('task-textarea',{
   data: function(){
     return {
       count: 0,
+      todo_count: 0,
+      doing_count: 0,
+      done_count: 0,
+
+      sizes: 0,
+      todo_sizes: 0,
+      doing_sizes: 0,
+      done_sizes: 0,
       text: ""
     }
   },
@@ -50,6 +58,13 @@ var taskTextarea = Vue.component('task-textarea',{
       }
     },
 
+    getSizes: function(tasks){
+      if (tasks.length == 0){ return 0; }
+
+      return tasks.length == 1 ? tasks[0].size : tasks.map(function(task){ return task.size; })
+       .reduce(function(prev, size){ return prev + size; });
+    },
+ 
     updateText: function(){
       var self = this;
       if (localStorage){
@@ -84,7 +99,19 @@ var taskTextarea = Vue.component('task-textarea',{
         });
 
       tasks.children = children;
+      var doing = children.filter(function(child){ return child.status != null && child.status.match(/Doing/i); });
+      var done = children.filter(function(child){ return child.status != null && child.status.match(/Done/i); });
+      var todo = children.filter(function(child){ return child.status == null || (!child.status.match(/Doing/i) && !child.status.match(/Done/i)); });
+
       self.count = children.length;
+      self.todo_count = todo.length;
+      self.doing_count = doing.length;
+      self.done_count = done.length;
+
+      self.sizes = self.getSizes(children);
+      self.todo_sizes = self.getSizes(todo);
+      self.doing_sizes = self.getSizes(doing);
+      self.done_sizes = self.getSizes(done);
 
       self.$emit('update-tasks',
         {
