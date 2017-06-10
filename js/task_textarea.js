@@ -20,8 +20,8 @@ var taskTextarea = Vue.component('task-textarea',{
   },
 
   mounted: function(){
-    if (window.localStorage.text){
-      this.text = window.localStorage.text;
+    if (localStorage.text){
+      this.text = localStorage.text;
     }else{
       // デフォルトテキスト
       this.text = [
@@ -52,7 +52,7 @@ var taskTextarea = Vue.component('task-textarea',{
 
     updateText: function(){
       var self = this;
-      window.localStorage.text = self.text;
+      localStorage.text = self.text;
 
       // タブ区切りを自動認識
       var sepaMode = "space";
