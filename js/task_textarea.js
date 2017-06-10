@@ -1,11 +1,6 @@
 var taskTextarea = Vue.component('task-textarea',{
   template: '<div>\
-    <div class="sepa-mode">\
-      <input type="radio" id="space" value="space" v-model="sepaMode">\
-      <label for="space">Space</label>\
-      <input type="radio" id="tab" value="tab" v-model="sepaMode">\
-      <label for="tab">Tab</label>\
-    </div>\
+    <div class="task-info">{{ count }} tasks.</div>\
     <textarea v-model="text" placeholder="Title 30 Todo/Doing/Done Assignee"></textarea>\
   </div>',
 
@@ -13,15 +8,12 @@ var taskTextarea = Vue.component('task-textarea',{
 
   data: function(){
     return {
-      sepaMode: "",
+      count: 0,
       text: ""
     }
   },
 
   watch: {
-    sepaMode: function(){
-      this.updateText();
-    },
     text: function(){
       this.updateText();
     },
@@ -45,19 +37,13 @@ var taskTextarea = Vue.component('task-textarea',{
         "タスク10 90 Done Bさん",
       ].join("\n");
     }
-
-    if (window.localStorage.sepaMode){
-      this.sepaMode = window.localStorage.sepaMode;
-    }else{
-      this.sepaMode = "space";
-    }
   },
 
   methods: {
-    getReg: function(){
+    getReg: function(sepaMode){
       var self = this;
 
-      if (self.sepaMode == "space"){
+      if (sepaMode == "space"){
         return /(\S+)[ ]+([\d\.]+)([ ]+(\S+))?([ ]+(\S+))?/;
       }else{
         return /(.+)[\t]+([\d\.]+)([\t]+(\w+))?([\t]+(.+))?/;
@@ -67,9 +53,14 @@ var taskTextarea = Vue.component('task-textarea',{
     updateText: function(){
       var self = this;
       window.localStorage.text = self.text;
-      window.localStorage.sepaMode = self.sepaMode;
 
-      var rowReg = self.getReg();
+      // タブ区切りを自動認識
+      var sepaMode = "space";
+      if (self.text.match(/\t/)){
+        sepaMode = "tab";
+      }
+
+      var rowReg = self.getReg(sepaMode);
 
       var tasks = {
         "children": null
@@ -91,6 +82,7 @@ var taskTextarea = Vue.component('task-textarea',{
         });
 
       tasks.children = children;
+      self.count = children.length;
 
       self.$emit('update-tasks',
         {

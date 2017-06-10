@@ -93,6 +93,11 @@ html,body {
   color: white;
 }
 
+.task-info {
+  color: white;
+  padding: 2px 5px;
+}
+
 textarea {
   font-family: Osaka-mono, "Osaka-等幅", "ＭＳ ゴシック", monospace;
   font-size: 14px;
