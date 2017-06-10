@@ -52,7 +52,9 @@ var taskTextarea = Vue.component('task-textarea',{
 
     updateText: function(){
       var self = this;
-      localStorage.text = self.text;
+      if (localStorage){
+        localStorage.text = self.text;
+      }
 
       // タブ区切りを自動認識
       var sepaMode = "space";
