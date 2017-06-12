@@ -1,12 +1,17 @@
 var taskTreemap = Vue.component('task-treemap',{
-  template: '<div id="treemap">\
-</div>',
+  template: '<div>\
+    <div class="task-info">\
+      残り規模 <span class="user-info" v-for="user in users"><span v-bind:class="user.class">{{user.name}}</span> {{user.todo_sizes}}/{{user.sizes}}</span>\
+    </div>\
+    <div id="treemap"></div>\
+  </div>',
 
   props: ['tasks'],
 
   data: function(){
     return {
-      ColorMax: 9
+      ColorMax: 9,
+      users: []
     }
   },
 
@@ -37,6 +42,13 @@ var taskTreemap = Vue.component('task-treemap',{
       return todo_color; //Todo or other
     },
 
+    getSizes: function(tasks){
+      if (tasks.length == 0){ return 0; }
+
+      return tasks.length == 1 ? tasks[0].size : tasks.map(function(task){ return task.size; })
+       .reduce(function(prev, size){ return prev + size; });
+    },
+ 
     update: function(){
       var self = this;
 
@@ -46,6 +58,7 @@ var taskTreemap = Vue.component('task-treemap',{
         myNode.removeChild(myNode.firstChild);
       }
 
+      self.users = [];
       if (self.tasks == null ||
           self.tasks.children == null ||
           self.tasks.children.length == 0){ return; }
@@ -59,7 +72,7 @@ var taskTreemap = Vue.component('task-treemap',{
         var assignee = child.assignee != null ? child.assignee : "";
 
         if (assignee_hash[assignee] == null){
-          assignee_hash[assignee] = { id: assignee_id++, children: [child]};
+          assignee_hash[assignee] = { id: ++assignee_id, children: [child]};
         }else{
           assignee_hash[assignee].children.push(child);
         }
@@ -74,6 +87,15 @@ var taskTreemap = Vue.component('task-treemap',{
           };
         })
       }
+
+      self.users = tasks_node.children.map(function(child){
+        return {
+          name: child.name != "" ? child.name : "未アサイン",
+          class: "task-assignee assignee-" + self.getColorNo(assignee_hash[child.name].id),
+          sizes: self.getSizes(child.children),
+          todo_sizes: self.getSizes(child.children.filter(function(child){ return child.status == null || !child.status.match(/Done/i); })),
+        };
+      });
 
       var height = document.getElementById("treemap").clientHeight;
       var width = document.getElementById("treemap").clientWidth;

@@ -1,6 +1,6 @@
 var taskTextarea = Vue.component('task-textarea',{
   template: '<div>\
-    <div class="task-info">{{done_count}}/{{ count }} tasks. {{done_sizes}}/{{ sizes }} sizes.</div>\
+    <div class="task-info">残り {{todo_count}}/{{ count }} タスク. {{todo_sizes}}/{{ sizes }} 規模.</div>\
     <textarea v-model="text" placeholder="Title 30 Todo/Doing/Done Assignee"></textarea>\
   </div>',
 
@@ -101,7 +101,7 @@ var taskTextarea = Vue.component('task-textarea',{
       tasks.children = children;
       var doing = children.filter(function(child){ return child.status != null && child.status.match(/Doing/i); });
       var done = children.filter(function(child){ return child.status != null && child.status.match(/Done/i); });
-      var todo = children.filter(function(child){ return child.status == null || (!child.status.match(/Doing/i) && !child.status.match(/Done/i)); });
+      var todo = children.filter(function(child){ return child.status == null || !child.status.match(/Done/i); });
 
       self.count = children.length;
       self.todo_count = todo.length;
