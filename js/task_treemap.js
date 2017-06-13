@@ -1,7 +1,7 @@
 var taskTreemap = Vue.component('task-treemap',{
   template: '<div>\
     <div class="task-info">\
-      残り規模 <span class="user-info" v-for="user in users"><span v-bind:class="user.class">{{user.name}}</span> {{user.todo_sizes}}/{{user.sizes}}</span>\
+      残り規模 <span class="user-info" v-for="user in users"><span v-bind:class="user.class">{{user.name}} {{user.todo_sizes}}/{{user.sizes}}</span></span>\
     </div>\
     <div id="treemap"></div>\
   </div>',

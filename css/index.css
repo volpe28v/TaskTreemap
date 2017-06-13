@@ -42,6 +42,7 @@ html,body {
 .task-assignee {
   font-weight: bold;
   font-size: 12px;
+  margin-top: 5px;
   margin-left: 5px;
   padding: 4px 5px;
   border-radius: 4px;
