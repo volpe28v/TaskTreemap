@@ -1,7 +1,10 @@
 var taskTreemap = Vue.component('task-treemap',{
   template: '<div>\
     <div class="task-info">\
-      残り規模 <span class="user-info" v-for="user in users"><span v-bind:class="user.class">{{user.name}} {{user.todo_sizes}}/{{user.sizes}}</span></span>\
+      残り規模 \
+      <span class="user-info" v-for="user in users" draggable="true" @dragstart="dragstart(user, $event)" @dragend="dragend">\
+        <span v-bind:class="user.class">{{user.name}} {{user.todo_sizes}}/{{user.sizes}}</span>\
+      </span>\
     </div>\
     <div id="treemap"></div>\
   </div>',
@@ -11,7 +14,8 @@ var taskTreemap = Vue.component('task-treemap',{
   data: function(){
     return {
       ColorMax: 9,
-      users: []
+      users: [],
+      draggingItem: null,
     }
   },
 
@@ -124,6 +128,13 @@ var taskTreemap = Vue.component('task-treemap',{
         .on("click",function(d){
           console.log(d);
         })
+        .on("dragover",function(d){
+          d3.event.preventDefault();
+        })
+        .on("drop",function(d){
+          d.assignee = self.draggingItem.name;
+          self.update();
+        })
         .html(function(d) {
           if (d.children){
             return "";
@@ -135,7 +146,14 @@ var taskTreemap = Vue.component('task-treemap',{
             ].join("");
           }
         });
-    }
+    },
+    dragstart: function (user,e) {
+      this.draggingItem = user;
+      e.target.style.opacity = 0.5;
+    },
+    dragend: function (e) {
+      e.target.style.opacity = 1;
+    },
   }
 });
 
