@@ -6,11 +6,15 @@ new Vue({
   el: '#app',
   data: {
     tasks: null,
+    textTasks: null,
   },
 
   methods: {
     updateTasks: function(params){
       this.tasks = params.tasks;
+    },
+    updateTextTasks: function(params){
+      this.textTasks = params.tasks;
     }
   }
 });

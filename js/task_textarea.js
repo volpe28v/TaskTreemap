@@ -4,7 +4,7 @@ var taskTextarea = Vue.component('task-textarea',{
     <textarea v-model="text" placeholder="Title 30 Todo/Doing/Done Assignee"></textarea>\
   </div>',
 
-  props: [],
+  props: ['tasks'],
 
   data: function(){
     return {
@@ -17,13 +17,18 @@ var taskTextarea = Vue.component('task-textarea',{
       todo_sizes: 0,
       doing_sizes: 0,
       done_sizes: 0,
-      text: ""
+      text: "",
+
+      sepaMode: "space"
     }
   },
 
   watch: {
     text: function(){
       this.updateText();
+    },
+    tasks: function(){
+      this.updateTasks();
     },
   },
 
@@ -72,12 +77,12 @@ var taskTextarea = Vue.component('task-textarea',{
       }
 
       // タブ区切りを自動認識
-      var sepaMode = "space";
+      self.sepaMode = "space";
       if (self.text.match(/\t/)){
-        sepaMode = "tab";
+        self.sepaMode = "tab";
       }
 
-      var rowReg = self.getReg(sepaMode);
+      var rowReg = self.getReg(self.sepaMode);
 
       var tasks = {
         "children": null
@@ -117,6 +122,23 @@ var taskTextarea = Vue.component('task-textarea',{
         {
           tasks: tasks
         });
+    },
+
+    updateTasks: function(){
+      var self = this;
+
+      var delim = self.sepaMode == "space" ? " " : "\t";
+      var children = self.tasks.children;
+      var tempText = [];
+      children.forEach(function(child){
+        tempText.push(
+          child.name + delim + 
+          child.size + delim + 
+          child.status + delim + 
+          (child.assignee ? child.assignee : ""));
+      });
+
+      self.text = tempText.join("\n");
     },
   }
 });
