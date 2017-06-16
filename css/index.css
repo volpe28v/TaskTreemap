@@ -38,6 +38,10 @@ html,body {
   color: #555;
 }
 
+.assignee-list-elem {
+  cursor: pointer;
+}
+
 .task-assignee {
   font-weight: bold;
   font-size: 12px;

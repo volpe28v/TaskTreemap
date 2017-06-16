@@ -95,7 +95,7 @@ var taskTreemap = Vue.component('task-treemap',{
       self.users = tasks_node.children.map(function(child){
         return {
           name: child.name,
-          class: "task-assignee assignee-" + self.getColorNo(assignee_hash[child.name].id),
+          class: "assignee-list-elem task-assignee assignee-" + self.getColorNo(assignee_hash[child.name].id),
           sizes: self.getSizes(child.children),
           todo_sizes: self.getSizes(child.children.filter(function(child){ return child.status == null || !child.status.match(/Done/i); })),
         };
