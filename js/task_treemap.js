@@ -16,6 +16,7 @@ var taskTreemap = Vue.component('task-treemap',{
       ColorMax: 9,
       users: [],
       draggingItem: null,
+      beforeSelected: null,
     }
   },
 
@@ -34,8 +35,9 @@ var taskTreemap = Vue.component('task-treemap',{
 
     getColorNo: function(id){
       var self = this;
+      if (id == 0) return 0;
 
-      return id % (self.ColorMax-1) + 1;
+      return id % (self.ColorMax) + 1;
     },
 
     getStatusColor: function(status){
@@ -126,7 +128,11 @@ var taskTreemap = Vue.component('task-treemap',{
         .style("border", "solid 1px #333")
         .style("padding", "0px")
         .on("click",function(d){
-          console.log(d);
+          if (self.beforeSelected){
+            self.beforeSelected.style.borderColor = "#333";
+          }
+          self.beforeSelected = d3.select(this)[0][0];
+          self.beforeSelected.style.borderColor = "red";
         })
         .on("dragover",function(d){
           d3.event.preventDefault();
