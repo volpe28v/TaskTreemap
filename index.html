@@ -2,10 +2,6 @@
 <html>
   <head>
     <title>TaskTreemap</title>
-    <script type="text/javascript"src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD06ErexK0u1vnaXGci0_JuuwCm2jkN36s&libraries=visualization"></script>
-    <script src="https://d3js.org/d3.v3.min.js"></script>
-    <script src="https://unpkg.com/vue"></script>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="css/index.css" media="screen" rel="stylesheet" type="text/css">
@@ -15,6 +11,11 @@
       <task-treemap class="leftpane" :tasks="tasks" v-on:update-tasks="updateTextTasks"></task-treemap>
       <task-textarea class="rightpane" :tasks="textTasks" v-on:update-tasks="updateTasks"></task-treemap>
     </div>
+
+    <script type="text/javascript"src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD06ErexK0u1vnaXGci0_JuuwCm2jkN36s&libraries=visualization"></script>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.7/ace.js"></script>
     <script type="text/javascript" src="dist/bundle.js">
     </script>
   </body>

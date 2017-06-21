@@ -115,3 +115,7 @@ textarea {
   color: white;
 }
 
+#editor{
+  flex: 1;
+}
+

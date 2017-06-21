@@ -1,7 +1,7 @@
 var taskTextarea = Vue.component('task-textarea',{
   template: '<div>\
     <div class="task-info">残り {{todo_count}}/{{ count }} タスク. {{todo_sizes}}/{{ sizes }} 規模.</div>\
-    <textarea v-model="text" placeholder="Title 30 Todo/Doing/Done Assignee"></textarea>\
+    <div id="editor"></div>\
   </div>',
 
   props: ['tasks'],
@@ -19,25 +19,25 @@ var taskTextarea = Vue.component('task-textarea',{
       done_sizes: 0,
       text: "",
 
-      sepaMode: "space"
+      sepaMode: "space",
+      editor: null
     }
   },
 
   watch: {
-    text: function(){
-      this.updateText();
-    },
     tasks: function(){
       this.updateTasks();
     },
   },
 
   mounted: function(){
+    var self = this;
+
     if (localStorage.text){
-      this.text = localStorage.text;
+      self.text = localStorage.text;
     }else{
       // デフォルトテキスト
-      this.text = [
+      self.text = [
         "タスク1 30 Todo",
         "タスク2 40 Todo",
         "タスク3 50 Todo Cさん",
@@ -50,6 +50,17 @@ var taskTextarea = Vue.component('task-textarea',{
         "タスク10 90 Done Bさん",
       ].join("\n");
     }
+
+    // ade editor setting
+    self.editor = ace.edit("editor");
+    self.editor.setTheme("ace/theme/chaos");
+    self.editor.getSession().setUseWrapMode(true);
+    self.editor.$blockScrolling = Infinity;
+    self.editor.on('change', function(){
+      self.text = self.editor.getValue();
+      self.updateText();
+    })
+    self.editor.setValue(self.text, -1)
   },
 
   methods: {
@@ -139,6 +150,7 @@ var taskTextarea = Vue.component('task-textarea',{
       });
 
       self.text = tempText.join("\n");
+      self.editor.setValue(self.text, -1)
     },
   }
 });
