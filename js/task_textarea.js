@@ -1,10 +1,10 @@
 var taskTextarea = Vue.component('task-textarea',{
   template: '<div>\
-    <div class="task-info">残り {{todo_count}}/{{ count }} タスク. {{todo_sizes}}/{{ sizes }} 規模.</div>\
+    <div class="task-info">残り {{todo_count}}/{{ count }} タスク. {{todo_sizes}}/{{ sizes }} 規模. [{{sepaMode}}]</div>\
     <div id="editor"></div>\
   </div>',
 
-  props: ['tasks'],
+  props: ['tasks','line'],
 
   data: function(){
     return {
@@ -27,6 +27,10 @@ var taskTextarea = Vue.component('task-textarea',{
   watch: {
     tasks: function(){
       this.updateTasks();
+    },
+    line: function(){
+      this.editor.gotoLine(this.line, 0);
+      this.editor.focus();
     },
   },
 
@@ -56,6 +60,7 @@ var taskTextarea = Vue.component('task-textarea',{
     self.editor.setTheme("ace/theme/chaos");
     self.editor.getSession().setUseWrapMode(true);
     self.editor.$blockScrolling = Infinity;
+    self.editor.session.setOptions({ tabSize: 2, useSoftTabs: false});
     self.editor.on('change', function(){
       self.text = self.editor.getValue();
       self.updateText();
@@ -96,21 +101,28 @@ var taskTextarea = Vue.component('task-textarea',{
       var rowReg = self.getReg(self.sepaMode);
 
       var tasks = {
-        "children": null
+        children: null
       }
 
       var children = self.text.split("\n")
+        .map(function(row, i){
+          return {
+            i: i+1,
+            line: row
+          };
+        })
         .filter(function(row){
-          var matched = row.match(rowReg);
+          var matched = row.line.match(rowReg);
           return matched != null;
         })
         .map(function(row){
-          var matched = row.match(rowReg);
+          var matched = row.line.match(rowReg);
           return {
-            "name": matched[1],
-            "size": Number(matched[2]),
-            "status": matched[4] ? matched[4] : "Todo",
-            "assignee": matched[6]
+            i: row.i,
+            name: matched[1],
+            size: Number(matched[2]),
+            status: matched[4] ? matched[4] : "Todo",
+            assignee: matched[6]
           }
         });
 

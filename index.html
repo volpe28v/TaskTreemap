@@ -8,8 +8,16 @@
   </head>
   <body>
     <div id="app">
-      <task-treemap class="leftpane" :tasks="tasks" v-on:update-tasks="updateTextTasks"></task-treemap>
-      <task-textarea class="rightpane" :tasks="textTasks" v-on:update-tasks="updateTasks"></task-treemap>
+      <task-treemap class="leftpane"
+        :tasks="tasks"
+        v-on:update-tasks="updateTextTasks"
+        v-on:select-task="selectTask">
+      </task-treemap>
+      <task-textarea class="rightpane"
+        :tasks="textTasks"
+        :line="taskLine"
+        v-on:update-tasks="updateTasks">
+      </task-treemap>
     </div>
 
     <script src="https://d3js.org/d3.v3.min.js"></script>

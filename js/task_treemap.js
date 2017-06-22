@@ -60,8 +60,7 @@ var taskTreemap = Vue.component('task-treemap',{
 
       self.users = [];
       if (self.tasks == null ||
-          self.tasks.children == null ||
-          self.tasks.children.length == 0){ return; }
+          self.tasks.children == null){ return; }
 
       var children = self.tasks.children;
 
@@ -108,6 +107,7 @@ var taskTreemap = Vue.component('task-treemap',{
 
       // 初期化
       d3.select("#treemap").selectAll("div").remove();
+      if (children.length == 0){ return; }
 
       // treemap 要素生成
       var task_tree = d3.select("#treemap")
@@ -123,6 +123,11 @@ var taskTreemap = Vue.component('task-treemap',{
           }
           self.beforeSelected = d3.select(this)[0][0];
           self.beforeSelected.style.borderColor = "red";
+
+          self.$emit('select-task',
+            {
+              no: d.i 
+            });
         })
         .on("dragover",function(d){
           d3.event.preventDefault();

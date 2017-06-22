@@ -7,6 +7,7 @@ new Vue({
   data: {
     tasks: null,
     textTasks: null,
+    taskLine: 0,
   },
 
   methods: {
@@ -15,6 +16,9 @@ new Vue({
     },
     updateTextTasks: function(params){
       this.textTasks = params.tasks;
+    },
+    selectTask: function(params){
+      this.taskLine = params.no;
     }
   }
 });
