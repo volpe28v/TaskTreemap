@@ -16,7 +16,6 @@ var taskTreemap = Vue.component('task-treemap',{
       ColorMax: 9,
       users: [],
       draggingItem: null,
-      beforeSelected: null,
     }
   },
 
@@ -118,12 +117,6 @@ var taskTreemap = Vue.component('task-treemap',{
       task_tree.enter()
         .append("div")
         .on("click",function(d){
-          if (self.beforeSelected){
-            self.beforeSelected.style.borderColor = "#333";
-          }
-          self.beforeSelected = d3.select(this)[0][0];
-          self.beforeSelected.style.borderColor = "red";
-
           self.$emit('select-task',
             {
               no: d.i 
@@ -133,7 +126,11 @@ var taskTreemap = Vue.component('task-treemap',{
           d3.event.preventDefault();
         })
         .on("drop",function(d){
+          children.forEach(function(child){
+            child.cursor = false;
+          });
           d.assignee = self.draggingItem.name;
+          d.cursor = true;
 
           var tasks = {
             "children": null
@@ -161,7 +158,15 @@ var taskTreemap = Vue.component('task-treemap',{
         })
         .style("position", "absolute")
         .style("overflow", "hidden")
-        .style("border", "solid 1px #333")
+        .style("border", function(d){
+          return d.cursor ? "solid 1px red" : "solid 1px #333";
+        })
+        .style("font-weight", function(d){
+          return d.cursor ? "bold" : "normal";
+        })
+        .style("color" , function(d){
+          return d.cursor ? "firebrick" : "black";
+        })
         .style("padding", "0px")
         .style("left", function(d) { return d.x + "px"; })
         .html(function(d) {

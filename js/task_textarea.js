@@ -20,7 +20,8 @@ var taskTextarea = Vue.component('task-textarea',{
       text: "",
 
       sepaMode: "space",
-      editor: null
+      editor: null,
+      beforeCursor: -1,
     }
   },
 
@@ -65,6 +66,13 @@ var taskTextarea = Vue.component('task-textarea',{
       self.text = self.editor.getValue();
       self.updateText();
     })
+    self.editor.session.selection.on("changeCursor" , function(e){
+      var cursor = self.editor.selection.getCursor();
+      if (self.beforeCursor.row == cursor.row) return;
+
+      self.beforeCursor = cursor;
+      self.updateText();
+    });
     self.editor.setValue(self.text, -1)
   },
 
@@ -104,6 +112,8 @@ var taskTextarea = Vue.component('task-textarea',{
         children: null
       }
 
+      var cursor = self.editor.selection.getCursor();
+
       var children = self.text.split("\n")
         .map(function(row, i){
           return {
@@ -119,6 +129,7 @@ var taskTextarea = Vue.component('task-textarea',{
           var matched = row.line.match(rowReg);
           return {
             i: row.i,
+            cursor: row.i == (cursor.row + 1),
             name: matched[1],
             size: Number(matched[2]),
             status: matched[4] ? matched[4] : "Todo",
@@ -153,16 +164,25 @@ var taskTextarea = Vue.component('task-textarea',{
       var delim = self.sepaMode == "space" ? " " : "\t";
       var children = self.tasks.children;
       var tempText = [];
-      children.forEach(function(child){
+      var cursor = -1;
+      children.forEach(function(child, i){
         tempText.push(
           child.name + delim + 
           child.size + delim + 
           child.status + delim + 
           (child.assignee ? child.assignee : ""));
+
+        if (child.cursor){
+          cursor = i+1;
+        }
       });
 
       self.text = tempText.join("\n");
       self.editor.setValue(self.text, -1)
+
+      self.editor.gotoLine(cursor, 0);
+      self.editor.focus();
+
     },
   }
 });
