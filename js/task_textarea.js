@@ -1,6 +1,6 @@
 var taskTextarea = Vue.component('task-textarea',{
   template: '<div>\
-    <div class="task-info">残り {{todo_count}}/{{ count }} タスク. {{todo_sizes}}/{{ sizes }} 規模. [{{sepaMode}}]</div>\
+    <div class="task-info">残り {{todo_count}}/{{ count }} タスク. {{todo_sizes}}/{{ sizes }} 規模. [{{sepaMode.mode}}]</div>\
     <div id="editor"></div>\
   </div>',
 
@@ -19,7 +19,7 @@ var taskTextarea = Vue.component('task-textarea',{
       done_sizes: 0,
       text: "",
 
-      sepaMode: "space",
+      sepaMode: this.judgeSepaMode(""),
       editor: null,
       beforeCursor: -1,
     }
@@ -77,16 +77,6 @@ var taskTextarea = Vue.component('task-textarea',{
   },
 
   methods: {
-    getReg: function(sepaMode){
-      var self = this;
-
-      if (sepaMode == "space"){
-        return /(\S+)[ ]+([\d\.]+)([ ]+(\S+))?([ ]+(\S+))?/;
-      }else{
-        return /(.+)[\t]+([\d\.]+)([\t]+(\w+))?([\t]+(.+))?/;
-      }
-    },
-
     getSizes: function(tasks){
       if (tasks.length == 0){ return 0; }
 
@@ -94,50 +84,25 @@ var taskTextarea = Vue.component('task-textarea',{
        .reduce(function(prev, size){ return prev + size; });
     },
  
-    updateText: function(){
+    judgeSepaMode: function(text){
+      if (text.match(/\t/)){
+        return {
+          mode: "tab",
+          delim: "\t",
+          reg: /(.+)[\t]+([\d\.]+)([\t]+(\w+))?([\t]+(.+))?/
+        };
+      }else{
+        return {
+          mode: "space",
+          delim: " ",
+          reg: /(\S+)[ ]+([\d\.]+)([ ]+(\S+))?([ ]+(\S+))?/
+        };
+      }
+    },
+
+    setTaskStatus: function(children){
       var self = this;
-      if (localStorage){
-        localStorage.text = self.text;
-      }
 
-      // タブ区切りを自動認識
-      self.sepaMode = "space";
-      if (self.text.match(/\t/)){
-        self.sepaMode = "tab";
-      }
-
-      var rowReg = self.getReg(self.sepaMode);
-
-      var tasks = {
-        children: null
-      }
-
-      var cursor = self.editor.selection.getCursor();
-
-      var children = self.text.split("\n")
-        .map(function(row, i){
-          return {
-            i: i+1,
-            line: row
-          };
-        })
-        .filter(function(row){
-          var matched = row.line.match(rowReg);
-          return matched != null;
-        })
-        .map(function(row){
-          var matched = row.line.match(rowReg);
-          return {
-            i: row.i,
-            cursor: row.i == (cursor.row + 1),
-            name: matched[1],
-            size: Number(matched[2]),
-            status: matched[4] ? matched[4] : "Todo",
-            assignee: matched[6]
-          }
-        });
-
-      tasks.children = children;
       var doing = children.filter(function(child){ return child.status != null && child.status.match(/Doing/i); });
       var done = children.filter(function(child){ return child.status != null && child.status.match(/Done/i); });
       var todo = children.filter(function(child){ return child.status == null || !child.status.match(/Done/i); });
@@ -151,17 +116,48 @@ var taskTextarea = Vue.component('task-textarea',{
       self.todo_sizes = self.getSizes(todo);
       self.doing_sizes = self.getSizes(doing);
       self.done_sizes = self.getSizes(done);
+    },
+
+    updateText: function(){
+      var self = this;
+      if (localStorage){
+        localStorage.text = self.text;
+      }
+
+      // タブ区切りを自動認識
+      self.sepaMode = self.judgeSepaMode(self.text);
+
+      var cursor = self.editor.selection.getCursor();
+
+      var children = self.text.split("\n")
+        .map(function(row, i){
+          var matched = row.match(self.sepaMode.reg);
+          if (matched == null){ return null; }
+          return {
+            i: i+1,
+            cursor: i == cursor.row,
+            name: matched[1],
+            size: Number(matched[2]),
+            status: matched[4] ? matched[4] : "Todo",
+            assignee: matched[6]
+          }
+        })
+        .filter(function(row){
+          return row != null;
+        });
+
+      self.setTaskStatus(children);
 
       self.$emit('update-tasks',
         {
-          tasks: tasks
+          tasks: { children: children }
         });
     },
 
     updateTasks: function(){
       var self = this;
 
-      var delim = self.sepaMode == "space" ? " " : "\t";
+      var delim = self.sepaMode.delim;
       var children = self.tasks.children;
       var tempText = [];
       var cursor = -1;
@@ -182,7 +178,6 @@ var taskTextarea = Vue.component('task-textarea',{
 
       self.editor.gotoLine(cursor, 0);
       self.editor.focus();
-
     },
   }
 });
