@@ -54,6 +54,13 @@ var taskTreemap = Vue.component('task-treemap',{
        .reduce(function(prev, size){ return prev + size; });
     },
  
+    getNextStatus: function(status){
+      if (status == null){ return "Doing"; }
+      if (status.match(/Done/i)){ return "Todo"; }
+      if (status.match(/Doing/i)){ return "Done"; }
+      return "Doing";
+    },
+
     update: function(){
       var self = this;
 
@@ -122,6 +129,20 @@ var taskTreemap = Vue.component('task-treemap',{
               no: d.i 
             });
         })
+        .on("dblclick",function(d){
+          d.status = self.getNextStatus(d.status);
+
+          var tasks = {
+            "children": null
+          }
+
+          tasks.children = children;
+          self.$emit('update-tasks',
+            {
+              tasks: tasks
+            });
+
+        })
         .on("dragover",function(d){
           d3.event.preventDefault();
         })
@@ -151,15 +172,19 @@ var taskTreemap = Vue.component('task-treemap',{
       d3.select("#treemap").selectAll("div")
         .style("left", function(d) { return d.x + "px"; })
         .style("top", function(d) { return d.y + "px"; })
-        .style("width", function(d) { return d.dx-2 + "px"; })
-        .style("height", function(d) { return d.dy-2 + "px"; })
+        .style("width", function(d) { return d.dx-4 + "px"; })
+        .style("height", function(d) { return d.dy-4 + "px"; })
         .style("background", function(d, i){
-          return self.getStatusColor(d.status);
+          if (d.size){
+            return self.getStatusColor(d.status);
+          }else{
+            return "#333";
+          }
         })
         .style("position", "absolute")
         .style("overflow", "hidden")
         .style("border", function(d){
-          return d.cursor ? "solid 1px red" : "solid 1px #333";
+          return d.cursor ? "solid 2px red" : "solid 2px #333";
         })
         .style("font-weight", function(d){
           return d.cursor ? "bold" : "normal";
@@ -168,6 +193,9 @@ var taskTreemap = Vue.component('task-treemap',{
           return d.cursor ? "firebrick" : "black";
         })
         .style("padding", "0px")
+        .style("border-radius", "6px") 
+        .style("-webkit-border-radius", "6px") 
+        .style("-moz-border-radius", "6px") 
         .style("left", function(d) { return d.x + "px"; })
         .html(function(d) {
           if (d.children){
