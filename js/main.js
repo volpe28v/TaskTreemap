@@ -16,6 +16,7 @@ new Vue({
     },
     updateTextTasks: function(params){
       this.textTasks = params.tasks;
+      this.taskLine = params.tasks.children.filter(function(task){ return task.cursor == true; })[0].i;
     },
     selectTask: function(params){
       this.taskLine = params.no;
