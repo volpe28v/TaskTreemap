@@ -42,6 +42,7 @@ html,body {
 .task-name {
   margin-top: 2px;
   margin-left: 8px;
+  margin-right: 5px;
   font-size: 12px;
 }
 
