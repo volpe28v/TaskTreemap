@@ -170,6 +170,7 @@ var taskTreemap = Vue.component('task-treemap',{
 
       // 更新処理
       d3.select("#treemap").selectAll("div")
+        .attr("class", "task-elem")
         .style("left", function(d) { return d.x + "px"; })
         .style("top", function(d) { return d.y + "px"; })
         .style("width", function(d) { return d.dx-4 + "px"; })
@@ -181,8 +182,6 @@ var taskTreemap = Vue.component('task-treemap',{
             return "#333";
           }
         })
-        .style("position", "absolute")
-        .style("overflow", "hidden")
         .style("border", function(d){
           return d.cursor ? "solid 2px red" : "solid 2px #333";
         })
@@ -192,17 +191,13 @@ var taskTreemap = Vue.component('task-treemap',{
         .style("color" , function(d){
           return d.cursor ? "firebrick" : "black";
         })
-        .style("padding", "0px")
-        .style("border-radius", "6px") 
-        .style("-webkit-border-radius", "6px") 
-        .style("-moz-border-radius", "6px") 
         .style("left", function(d) { return d.x + "px"; })
         .html(function(d) {
           if (d.children){
             return "";
           }else{
             return [
-              d.assignee ? '<div><span class="task-assignee assignee-' + self.getColorNo(assignee_hash[d.assignee].id) + '">' + d.assignee + '</span></div>' : "",
+              d.assignee ? '<div class="assignee-div"><span class="task-assignee assignee-' + self.getColorNo(assignee_hash[d.assignee].id) + '">' + d.assignee + '</span></div>' : "",
               '<div class="task-name">' + d.name + '</div>',
               '<div class="task-size">' + d.size + '</div>',
             ].join("");
