@@ -26,6 +26,12 @@ new Vue({
       var cursor_task = tasks.children.filter(function(task){ return task.cursor == true; })[0];
       if (cursor_task){
         this.taskLine = cursor_task.i;
+        return;
+      }
+
+      if (tasks.line){
+        this.taskLine = tasks.line;
+        return;
       }
     }
   }

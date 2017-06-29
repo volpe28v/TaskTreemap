@@ -153,7 +153,10 @@ var taskTextarea = Vue.component('task-textarea',{
 
       self.$emit('update-tasks',
         {
-          tasks: { children: children }
+          tasks: {
+            children: children,
+            line: cursor.row + 1
+          }
         });
     },
 
