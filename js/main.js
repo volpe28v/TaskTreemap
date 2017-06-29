@@ -13,19 +13,20 @@ new Vue({
   methods: {
     updateTasks: function(params){
       this.tasks = params.tasks;
-      
-      // カーソル位置を保持する(何故か chilren.lenght が 0 になる場合があるので弾く)
-      var cursor_task = params.tasks.children.filter(function(task){ return task.cursor == true; })[0];
-      if (cursor_task){
-        this.taskLine = cursor_task.i;
-      }
+      this.setTaskLine(params.tasks);
     },
     updateTextTasks: function(params){
       this.textTasks = params.tasks;
-      this.taskLine = params.tasks.children.filter(function(task){ return task.cursor == true; })[0].i;
+      this.setTaskLine(params.tasks);
     },
     selectTask: function(params){
       this.taskLine = params.no;
+    },
+    setTaskLine: function(tasks){
+      var cursor_task = tasks.children.filter(function(task){ return task.cursor == true; })[0];
+      if (cursor_task){
+        this.taskLine = cursor_task.i;
+      }
     }
   }
 });

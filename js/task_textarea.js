@@ -21,7 +21,7 @@ var taskTextarea = Vue.component('task-textarea',{
 
       sepaMode: this.judgeSepaMode(""),
       editor: null,
-      beforeCursor: -1,
+      beforeCursor: {row: -1, column: -1},
     }
   },
 
@@ -30,7 +30,7 @@ var taskTextarea = Vue.component('task-textarea',{
       this.updateTasks();
     },
     line: function(){
-      this.editor.gotoLine(this.line, 0);
+      this.editor.gotoLine(this.line, this.beforeCursor.column);
       this.editor.focus();
     },
   },
@@ -69,9 +69,11 @@ var taskTextarea = Vue.component('task-textarea',{
     })
     self.editor.session.selection.on("changeCursor" , function(e){
       var cursor = self.editor.selection.getCursor();
-      if (self.beforeCursor.row == cursor.row) return;
-
+      var beforeRow = self.beforeCursor.row;
       self.beforeCursor = cursor;
+
+      if (beforeRow == cursor.row) return;
+
       self.updateText();
     });
     self.editor.setValue(self.text, -1)
@@ -90,13 +92,13 @@ var taskTextarea = Vue.component('task-textarea',{
         return {
           mode: "tab",
           delim: "\t",
-          reg: /(.+)[\t]+([\d\.]+)([\t]+(\w+))?([\t]+(.+))?/
+          reg: /^(\S+)([\t]+([\d\.]+)(([\t]+(\w+))([\t]+(.+))?)?)?/
         };
       }else{
         return {
           mode: "space",
           delim: " ",
-          reg: /(\S+)[ ]+([\d\.]+)([ ]+(\S+))?([ ]+(\S+))?/
+          reg: /^(\S+)([ ]+([\d\.]+)(([ ]+(\S+))([ ]+(\S+))?)?)?/
         };
       }
     },
@@ -138,9 +140,9 @@ var taskTextarea = Vue.component('task-textarea',{
             i: i+1,
             cursor: i == cursor.row,
             name: matched[1],
-            size: Number(matched[2]),
-            status: matched[4] ? matched[4] : "Todo",
-            assignee: matched[6]
+            size: matched[3] ? Number(matched[3]) : 1,
+            status: matched[6] ? matched[6] : "Todo",
+            assignee: matched[8] ? matched[8] : "",
           }
         })
         .filter(function(row){
@@ -177,7 +179,7 @@ var taskTextarea = Vue.component('task-textarea',{
       self.text = tempText.join("\n");
       self.editor.setValue(self.text, -1)
 
-      self.editor.gotoLine(cursor, 0);
+      self.editor.gotoLine(cursor, self.beforeCursor.column);
       self.editor.focus();
     },
   }
