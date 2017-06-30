@@ -92,7 +92,7 @@ var taskTextarea = Vue.component('task-textarea',{
         return {
           mode: "tab",
           delim: "\t",
-          reg: /^(.+)([\t]+([\d\.]+)(([\t]+(\w+))([\t]+(.+))?)?)?/
+          reg: /^([^\t]+)([\t]+([\d\.]+)(([\t]+(\w+))([\t]+([^\t]+))?)?)?/
         };
       }else{
         return {
