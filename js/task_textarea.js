@@ -86,13 +86,13 @@ var taskTextarea = Vue.component('task-textarea',{
       return tasks.length == 1 ? tasks[0].size : tasks.map(function(task){ return task.size; })
        .reduce(function(prev, size){ return prev + size; });
     },
- 
+
     judgeSepaMode: function(text){
       if (text.match(/\t/)){
         return {
           mode: "tab",
           delim: "\t",
-          reg: /^(\S+)([\t]+([\d\.]+)(([\t]+(\w+))([\t]+(.+))?)?)?/
+          reg: /^(.+)([\t]+([\d\.]+)(([\t]+(\w+))([\t]+(.+))?)?)?/
         };
       }else{
         return {
