@@ -1,6 +1,7 @@
 var taskTreemap = Vue.component('task-treemap',{
   template: '<div>\
     <div class="task-info">\
+      <button v-on:click="hideDone=!hideDone">Done</button>\
       残り規模 \
       <span class="user-info" v-for="user in users" draggable="true" @dragstart="dragstart(user, $event)" @dragend="dragend">\
         <span v-bind:class="user.class">{{user.name}} {{user.todo_sizes}}/{{user.sizes}}</span>\
@@ -16,12 +17,16 @@ var taskTreemap = Vue.component('task-treemap',{
       ColorMax: 9,
       users: [],
       draggingItem: null,
+      hideDone: false,
     }
   },
 
   watch: {
     tasks: function(){
       this.setTasks();
+    },
+    hideDone: function(){
+      this.update();
     }
   },
 
@@ -89,7 +94,13 @@ var taskTreemap = Vue.component('task-treemap',{
           return {
             "name": key,
             "children": assignee_hash[key].children
-          };
+              .filter(function(child){
+                return !self.hideDone || !child.status.match(/Done/i);
+              })
+          }
+        })
+        .filter(function(child){
+          return child.children.length != 0;
         })
       }
 
