@@ -45,10 +45,13 @@ var taskTreemap = Vue.component('task-treemap',{
     },
 
     getStatusColor: function(status){
-      var todo_color = "rgb(152, 223, 138)";
+      //var todo_color = "rgb(152, 223, 138)";
+      var todo_color = "#86b070";
       if (status == null){ return todo_color; }
-      if (status.match(/Done/i)){ return "rgb(199, 199, 199)"; }
-      if (status.match(/Doing/i)){ return "rgb(174, 199, 232)"; }
+      //if (status.match(/Done/i)){ return "rgb(199, 199, 199)"; }
+      if (status.match(/Done/i)){ return "#666666"; }
+      //if (status.match(/Doing/i)){ return "rgb(174, 199, 232)"; }
+      if (status.match(/Doing/i)){ return "#149bdf"; }
       return todo_color; //Todo or other
     },
 
@@ -184,8 +187,8 @@ var taskTreemap = Vue.component('task-treemap',{
         .attr("class", "task-elem")
         .style("left", function(d) { return d.x + "px"; })
         .style("top", function(d) { return d.y + "px"; })
-        .style("width", function(d) { return d.dx-4 + "px"; })
-        .style("height", function(d) { return d.dy-4 + "px"; })
+        .style("width", function(d) { return d.dx-6 + "px"; })
+        .style("height", function(d) { return d.dy-6 + "px"; })
         .style("background", function(d, i){
           if (d.size){
             return self.getStatusColor(d.status);
@@ -194,10 +197,7 @@ var taskTreemap = Vue.component('task-treemap',{
           }
         })
         .style("border", function(d){
-          return d.cursor ? "solid 2px red" : "solid 2px #333";
-        })
-        .style("font-weight", function(d){
-          return d.cursor ? "bold" : "normal";
+          return d.cursor ? "solid 3px #f8e352" : "solid 3px #333";
         })
         .style("color" , function(d){
           return d.cursor ? "firebrick" : "black";
