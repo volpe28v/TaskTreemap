@@ -30,6 +30,10 @@ var taskTreemap = Vue.component('task-treemap',{
     }
   },
 
+  mounted: function(){
+    this.addResizeHandler();
+  },
+
   methods: {
     setTasks: function(){
       var self = this;
@@ -219,6 +223,22 @@ var taskTreemap = Vue.component('task-treemap',{
     dragend: function (e) {
       e.target.style.opacity = 1;
     },
+
+    addResizeHandler: function(){
+      var self = this;
+      var resizeTimer;
+      var interval = Math.floor(1000 / 60 * 10);
+
+      window.addEventListener('resize', function (event) {
+        if (resizeTimer !== false) {
+          clearTimeout(resizeTimer);
+        }
+        resizeTimer = setTimeout(function () {
+          self.update();
+        }, interval);
+      });
+    },
+
   }
 });
 
