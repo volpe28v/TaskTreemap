@@ -38,9 +38,8 @@ var taskTextarea = Vue.component('task-textarea',{
   mounted: function(){
     var self = this;
 
-    if (localStorage.text){
-      self.text = localStorage.text;
-    }else{
+    self.text = self.getTextFromLocalstorage();
+    if (self.text == ""){
       // デフォルトテキスト
       self.text = [
         "テキストに書いたタスクがTreemapとして表示されるよ 35 Todo Aさん",
@@ -123,9 +122,7 @@ var taskTextarea = Vue.component('task-textarea',{
 
     updateText: function(){
       var self = this;
-      if (localStorage){
-        localStorage.text = self.text;
-      }
+      self.setTextToLocalStorage(self.text);
 
       // タブ区切りを自動認識
       self.sepaMode = self.judgeSepaMode(self.text);
@@ -184,6 +181,25 @@ var taskTextarea = Vue.component('task-textarea',{
 
       self.editor.gotoLine(cursor, self.beforeCursor.column);
       self.editor.focus();
+    },
+
+    getTextFromLocalstorage: function(){
+      try{
+        if (localStorage && localStorage.text){
+          return localStorage.text;
+        }
+        return "";
+      }catch (err){
+        return "";
+      }
+    },
+    setTextToLocalStorage: function(text){
+      try{
+        if (localStorage){
+          localStorage.text = text;
+        }
+      }catch (err){
+      }
     },
   }
 });
