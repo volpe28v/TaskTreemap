@@ -45,12 +45,9 @@ var taskTreemap = Vue.component('task-treemap',{
     },
 
     getStatusColor: function(status){
-      //var todo_color = "rgb(152, 223, 138)";
-      var todo_color = "#86b070";
+      var todo_color = "#6aa43e";
       if (status == null){ return todo_color; }
-      //if (status.match(/Done/i)){ return "rgb(199, 199, 199)"; }
       if (status.match(/Done/i)){ return "#666666"; }
-      //if (status.match(/Doing/i)){ return "rgb(174, 199, 232)"; }
       if (status.match(/Doing/i)){ return "#149bdf"; }
       return todo_color; //Todo or other
     },
