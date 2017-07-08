@@ -4,7 +4,7 @@ var taskTreemap = Vue.component('task-treemap',{
       <button v-on:click="hideDone=!hideDone">Done</button>\
       残り規模 \
       <span class="user-info" v-for="user in users" draggable="true" @dragstart="dragstart(user, $event)" @dragend="dragend">\
-        <span v-bind:class="user.class">{{user.name}} {{user.todo_sizes}}/{{user.sizes}}</span>\
+        <span v-bind:class="user.class" v-on:click="selectUser(user)">{{user.name}} {{user.todo_sizes}}/{{user.sizes}}</span>\
       </span>\
     </div>\
     <div id="treemap"></div>\
@@ -18,6 +18,7 @@ var taskTreemap = Vue.component('task-treemap',{
       users: [],
       draggingItem: null,
       hideDone: false,
+      selectedUser: null,
     }
   },
 
@@ -99,7 +100,12 @@ var taskTreemap = Vue.component('task-treemap',{
             "name": key,
             "children": assignee_hash[key].children
               .filter(function(child){
-                return !self.hideDone || !child.status.match(/Done/i);
+                if (self.hideDone && child.status.match(/Done/i)){
+                  return false;
+                }else if (self.selectedUser != null && self.selectedUser.name != child.assignee) {
+                  return false;
+                }
+                return true;
               })
           }
         })
@@ -237,6 +243,16 @@ var taskTreemap = Vue.component('task-treemap',{
           self.update();
         }, interval);
       });
+    },
+    
+    selectUser: function(user){
+      var self = this;
+      if (self.selectedUser != null && self.selectedUser.name == user.name){
+        self.selectedUser = null;
+      }else{
+        self.selectedUser = user;
+      }
+      self.update();
     },
 
   }
