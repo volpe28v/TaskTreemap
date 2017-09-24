@@ -1,13 +1,23 @@
 // vue vm
-var taskTreemap = require("./task_treemap");
-var taskTextarea= require("./task_textarea");
+var taskTreemap  = require("./task_treemap");
+var taskTextarea = require("./task_textarea");
+
+var router = new VueRouter({
+  mode: 'history',
+  routes: []
+});
 
 new Vue({
+  router: router,
   el: '#app',
-  data: {
-    tasks: null,
-    textTasks: null,
-    taskLine: 0,
+  data: function(){
+    return {
+      tasks: null,
+      textTasks: null,
+      taskLine: 0,
+      id: this.$route.query.id,
+      initialText: "",
+    }
   },
 
   methods: {

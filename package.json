@@ -4,6 +4,7 @@
   "description": "タスクの規模と進捗を可視化する html",
   "main": "main.js",
   "dependencies": {
+    "express": "^4.15.3"
   },
   "devDependencies": {
     "webpack": "^2.2.1"

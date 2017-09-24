@@ -1,14 +1,14 @@
 const webpack = require("webpack");
 
 module.exports = {
-  context: __dirname + '/js',
+  context: __dirname + '/public/js',
 
   entry: {
     js: "./main.js"
   },
 
   output: {
-    path: __dirname + '/dist',
+    path: __dirname + '/public/dist',
     filename: "./bundle.js"
   },
 

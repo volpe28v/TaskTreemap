@@ -15,6 +15,7 @@
         v-on:select-task="selectTask">
       </task-treemap>
       <task-textarea class="rightpane"
+        :id="id"
         :tasks="textTasks"
         :line="taskLine"
         v-on:update-tasks="updateTasks">
@@ -23,6 +24,7 @@
 
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.7/ace.js"></script>
     <script type="text/javascript" src="dist/bundle.js">
     </script>

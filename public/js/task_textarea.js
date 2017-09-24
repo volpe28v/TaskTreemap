@@ -4,7 +4,7 @@ var taskTextarea = Vue.component('task-textarea',{
     <div id="editor"></div>\
   </div>',
 
-  props: ['tasks','line'],
+  props: ['tasks','line','id'],
 
   data: function(){
     return {
@@ -38,22 +38,29 @@ var taskTextarea = Vue.component('task-textarea',{
   mounted: function(){
     var self = this;
 
-    self.text = self.getTextFromLocalstorage();
-    if (self.text == ""){
-      // デフォルトテキスト
-      self.text = [
-        "テキストに書いたタスクがTreemapとして表示されるよ 35 Todo Aさん",
-        "フォーマットは[タスク名][規模][ステータス][アサイン]だよ 40 Todo",
-        "[規模][ステータス][アサイン]は省略可能だよ 30 Doing",
-        "ダブルクリックするとステータスが変わるよ 50 Todo Cさん",
-        "アサイン名をタスクにドラッグできるよ 60 Todo",
-        "タスクを選択すると対応するテキストにフォーカスするよ 70 Doing Aさん",
-        "カーソル位置に対応するタスクが選択されるよ 80 Done",
-        "Excelからコピペできるよ 55 Todo Aさん",
-        "区切りはタブとスペースに対応しているよ 45 Doing",
-        "ステータスがDoneになると残り規模が減るよ 35 Done Cさん",
-        "タスクはローカルストレージに保存されるよ 90 Done Bさん",
-      ].join("\n");
+    console.log(self.id);
+
+    if (self.id == null){
+      self.text = self.getTextFromLocalstorage();
+      if (self.text == ""){
+        // デフォルトテキスト
+        self.text = [
+          "テキストに書いたタスクがTreemapとして表示されるよ 35 Todo Aさん",
+          "フォーマットは[タスク名][規模][ステータス][アサイン]だよ 40 Todo",
+          "[規模][ステータス][アサイン]は省略可能だよ 30 Doing",
+          "ダブルクリックするとステータスが変わるよ 50 Todo Cさん",
+          "アサイン名をタスクにドラッグできるよ 60 Todo",
+          "タスクを選択すると対応するテキストにフォーカスするよ 70 Doing Aさん",
+          "カーソル位置に対応するタスクが選択されるよ 80 Done",
+          "Excelからコピペできるよ 55 Todo Aさん",
+          "区切りはタブとスペースに対応しているよ 45 Doing",
+          "ステータスがDoneになると残り規模が減るよ 35 Done Cさん",
+          "タスクはローカルストレージに保存されるよ 90 Done Bさん",
+        ].join("\n");
+      }
+    }else{
+      // id に紐づくデータをサーバから取得する
+
     }
 
     // ade editor setting
@@ -195,7 +202,7 @@ var taskTextarea = Vue.component('task-textarea',{
     },
     setTextToLocalStorage: function(text){
       try{
-        if (localStorage){
+        if (this.id == null && localStorage){
           localStorage.text = text;
         }
       }catch (err){
