@@ -1,3 +1,5 @@
+var axios = require("axios");
+
 var taskTextarea = Vue.component('task-textarea',{
   template: '<div>\
     <div class="task-info">残り {{todo_count}}/{{ count }} タスク. {{todo_sizes}}/{{ sizes }} 規模. [{{sepaMode.mode}}]</div>\
@@ -60,7 +62,10 @@ var taskTextarea = Vue.component('task-textarea',{
       }
     }else{
       // id に紐づくデータをサーバから取得する
-
+      axios.post('/getData', { id: self.id})
+        .then(function (response) {
+          self.editor.setValue(response.data, -1)
+        });
     }
 
     // ade editor setting

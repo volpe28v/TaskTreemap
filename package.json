@@ -4,6 +4,8 @@
   "description": "タスクの規模と進捗を可視化する html",
   "main": "main.js",
   "dependencies": {
+    "axios": "^0.16.2",
+    "body-parser": "^1.18.2",
     "express": "^4.15.3"
   },
   "devDependencies": {
