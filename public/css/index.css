@@ -60,6 +60,7 @@ html,body {
 .assignee-div {
   margin-top: 3px;
   margin-left: 5px;
+  float: right;
 }
 
 .task-assignee {
