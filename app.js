@@ -7,28 +7,53 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-app.post('/getData', function (req, res) {
-  console.log("getData");
-  console.log(req.body);
-  var id = req.body.id;
+var program = require('commander');
+program
+  .version('1.0.0')
+  .option('-d, --db_name [name]', 'db name. default is "tasktreemap_db".')
+  .option('-p, --port <n>', 'port no. default is 3000.')
+  .parse(process.argv);
 
-  //TODO DBから取得する
-  
-  //TODO ダミーの値を返す
-  res.send(id);
+app.set('db_name', program.db_name || 'tasktreemap_db');
+app.set('port', program.port || process.env.PORT || 3000);
+
+var mongo_builder = require('./lib/mongo_builder');
+var tasktreemap_db = require("./lib/tasktreemap_db");
+
+Promise.all([
+  mongo_builder.ready(app.get('db_name'))
+])
+.then(function(results){
+  tasktreemap_db.set_db(results[0]);
+  startServer();
 });
 
-app.post('/saveData', function (req, res) {
-  console.log("saveData");
-  console.log(req.body);
-  var id = req.body.id;
+function startServer(){
+  app.post('/getData', function (req, res) {
+    console.log("getData");
+    console.log(req.body);
+    var id = req.body.id;
 
-  //TODO DBに保存する
-  
-  res.send("save ok");
-});
+    tasktreemap_db.find(id)
+      .then(function(result){
+        console.log(result);
+        res.send(result);
+      });
+  });
+
+  app.post('/saveData', function (req, res) {
+    console.log("saveData");
+    console.log(req.body);
+
+    tasktreemap_db.save(req.body)
+      .then(function(result){
+        res.send("save ok");
+      });
+  });
+
+  app.listen(app.get('port'), function () {
+    console.log('TaskTreeMap listening on port ' + app.get('port'));
+  });
+}
 
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
-});

@@ -1,17 +1,21 @@
 {
   "name": "tasktreemap",
   "version": "1.0.0",
-  "description": "タスクの規模と進捗を可視化する html",
+  "description": "タスクの規模と進捗を可視化する",
   "main": "main.js",
   "dependencies": {
     "axios": "^0.16.2",
     "body-parser": "^1.18.2",
-    "express": "^4.15.3"
+    "commander": "^2.11.0",
+    "express": "^4.15.3",
+    "moment": "^2.18.1",
+    "mongodb": "^2.2.31"
   },
   "devDependencies": {
     "webpack": "^2.2.1"
   },
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

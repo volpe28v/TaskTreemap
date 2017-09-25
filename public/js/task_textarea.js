@@ -24,6 +24,8 @@ var taskTextarea = Vue.component('task-textarea',{
       sepaMode: this.judgeSepaMode(""),
       editor: null,
       beforeCursor: {row: -1, column: -1},
+
+      saveTimer: null,
     }
   },
 
@@ -64,7 +66,11 @@ var taskTextarea = Vue.component('task-textarea',{
       // id に紐づくデータをサーバから取得する
       axios.post('/getData', { id: self.id})
         .then(function (response) {
-          self.editor.setValue(response.data, -1)
+          if (response.data){
+            self.editor.setValue(response.data.text, -1)
+          }else{
+            self.editor.setValue("", -1)
+          }
         });
     }
 
@@ -77,6 +83,8 @@ var taskTextarea = Vue.component('task-textarea',{
     self.editor.on('change', function(){
       self.text = self.editor.getValue();
       self.updateText();
+      self.saveText();
+
     })
     self.editor.session.selection.on("changeCursor" , function(e){
       var cursor = self.editor.selection.getCursor();
@@ -91,6 +99,22 @@ var taskTextarea = Vue.component('task-textarea',{
   },
 
   methods: {
+    saveText: function(){
+      var self = this;
+
+      if (self.id == null){
+        self.setTextToLocalStorage(self.text);
+      }else{
+        clearTimeout(self.saveTimer);
+        self.saveTimer = setTimeout(function(){
+          axios.post('/saveData', { id: self.id, text: self.text })
+            .then(function (response) {
+              console.log(response.data);
+            });
+        }, 1000);
+      }
+    },
+
     getSizes: function(tasks){
       if (tasks.length == 0){ return 0; }
 
@@ -134,7 +158,6 @@ var taskTextarea = Vue.component('task-textarea',{
 
     updateText: function(){
       var self = this;
-      self.setTextToLocalStorage(self.text);
 
       // タブ区切りを自動認識
       self.sepaMode = self.judgeSepaMode(self.text);
