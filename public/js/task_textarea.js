@@ -1,4 +1,5 @@
 var axios = require("axios");
+var Range = ace.require('ace/range').Range;
 
 var taskTextarea = Vue.component('task-textarea',{
   template: '<div>\
@@ -26,6 +27,7 @@ var taskTextarea = Vue.component('task-textarea',{
       beforeCursor: {row: -1, column: -1},
 
       saveTimer: null,
+      markerIds: [],
     }
   },
 
@@ -162,11 +164,12 @@ var taskTextarea = Vue.component('task-textarea',{
 
       var cursor = self.editor.selection.getCursor();
 
+      self.clearMarkers();
       var children = self.text.split("\n")
         .map(function(row, i){
           var matched = row.match(self.sepaMode.reg);
           if (matched == null){ return null; }
-          return {
+          var child = {
             i: i+1,
             cursor: i == cursor.row,
             name: matched[1],
@@ -174,6 +177,10 @@ var taskTextarea = Vue.component('task-textarea',{
             status: matched[6] ? matched[6] : "Todo",
             assignee: matched[8] ? matched[8] : "",
           }
+
+          self.addMarker(child,i);
+
+          return child;
         })
         .filter(function(row){
           return row != null;
@@ -190,6 +197,23 @@ var taskTextarea = Vue.component('task-textarea',{
         });
     },
 
+    addMarker: function(child, i){
+      var self = this;
+      if(child.status != null && child.status.match(/Doing/i)){
+        self.markerIds.push(self.editor.session.addMarker(new Range(i, 0, i, 100), "doing-text", "fullLine"));
+      }else if (child.status == null || !child.status.match(/Done/i)){
+        self.markerIds.push(self.editor.session.addMarker(new Range(i, 0, i, 100), "todo-text", "fullLine"));
+      }
+    },
+
+    clearMarkers: function(){
+      var self = this;
+      self.markerIds.map(function(id){
+        self.editor.session.removeMarker(id);
+      });
+      self.markerIds = [];
+    },
+
     updateTasks: function(){
       var self = this;
 
@@ -197,6 +221,9 @@ var taskTextarea = Vue.component('task-textarea',{
       var children = self.tasks.children;
       var tempText = [];
       var cursor = -1;
+
+      self.clearMarkers();
+
       children.forEach(function(child, i){
         tempText.push(
           child.name + delim + 
@@ -207,6 +234,8 @@ var taskTextarea = Vue.component('task-textarea',{
         if (child.cursor){
           cursor = i+1;
         }
+
+        self.addMarker(child,i);
       });
 
       self.text = tempText.join("\n");

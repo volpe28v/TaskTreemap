@@ -139,6 +139,18 @@ textarea {
   flex: 1;
 }
 
+.todo-text {
+  position:absolute;
+  background:rgba(106,164,62,0.5);
+  z-index:20
+}
+
+.doing-text {
+  position:absolute;
+  background:rgba(20,155,223,0.5);
+  z-index:20
+}
+
 @media screen and (max-width: 700px) {
   #app {
     flex-direction: column;
