@@ -42,8 +42,6 @@ var taskTextarea = Vue.component('task-textarea',{
   mounted: function(){
     var self = this;
 
-    console.log(self.id);
-
     if (self.id == null){
       self.text = self.getTextFromLocalstorage();
       if (self.text == ""){
