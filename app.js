@@ -1,7 +1,15 @@
 var express = require('express');
 var app = express();
+var server = require('http').createServer(app);
 var path = require('path');
 var bodyParser = require('body-parser');
+
+var io = require('socket.io').listen(server,{ 'destroy buffer size': Infinity });
+io.set("log level", 1);
+
+var index_socket = require('./lib/index_socket');
+index_socket.setup(io);
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({extended: true}));
@@ -51,7 +59,7 @@ function startServer(){
       });
   });
 
-  app.listen(app.get('port'), function () {
+  server.listen(app.get('port'), function () {
     console.log('TaskTreeMap listening on port ' + app.get('port'));
   });
 }

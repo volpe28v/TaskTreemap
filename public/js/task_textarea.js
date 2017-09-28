@@ -7,7 +7,7 @@ var taskTextarea = Vue.component('task-textarea',{
     <div id="editor"></div>\
   </div>',
 
-  props: ['tasks','line','id'],
+  props: ['tasks','line','id','socket'],
 
   data: function(){
     return {
@@ -64,14 +64,13 @@ var taskTextarea = Vue.component('task-textarea',{
       }
     }else{
       // id に紐づくデータをサーバから取得する
-      axios.post('/getData', { id: self.id})
-        .then(function (response) {
-          if (response.data){
-            self.editor.setValue(response.data.text, -1)
-          }else{
-            self.editor.setValue("", -1)
-          }
-        });
+      self.socket.on("id_" + self.id, function(data){
+        console.log("id_" + self.id);
+        console.log(data);
+        self.editor.setValue(data.text, -1)
+      });
+
+      self.socket.emit('get_data', {id: self.id});
     }
 
     // ade editor setting
@@ -81,11 +80,23 @@ var taskTextarea = Vue.component('task-textarea',{
     self.editor.$blockScrolling = Infinity;
     self.editor.session.setOptions({ tabSize: 2, useSoftTabs: false});
     self.editor.on('change', function(){
-      self.text = self.editor.getValue();
-      self.updateText();
-      self.saveText();
+      clearTimeout(self.saveTimer);
+      self.saveTimer = setTimeout(function(){
+        var newText = self.editor.getValue();
+        var oldText = self.text;
 
-    })
+        if (newText != oldText){
+          console.log("saveText");
+          console.log("1 : " + newText);
+          console.log("2 : " + oldText);
+          self.text = newText;
+          self.saveText();
+        }else{
+          self.updateText();
+        }
+      }, 1000);
+    });
+
     self.editor.session.selection.on("changeCursor" , function(e){
       var cursor = self.editor.selection.getCursor();
       var beforeRow = self.beforeCursor.row;
@@ -105,13 +116,11 @@ var taskTextarea = Vue.component('task-textarea',{
       if (self.id == null){
         self.setTextToLocalStorage(self.text);
       }else{
-        clearTimeout(self.saveTimer);
-        self.saveTimer = setTimeout(function(){
-          axios.post('/saveData', { id: self.id, text: self.text })
-            .then(function (response) {
-              console.log(response.data);
-            });
-        }, 1000);
+        //clearTimeout(self.saveTimer);
+        //self.saveTimer = setTimeout(function(){
+          console.log("saved");
+          self.socket.emit('save_data', {id: self.id, text: self.text});
+        //}, 1000);
       }
     },
 

@@ -10,10 +10,10 @@
     "express": "^4.15.3",
     "moment": "^2.18.1",
     "mongodb": "^2.2.31",
+    "socket.io": "^2.0.3",
     "webpack": "^3.5.5"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "scripts": {
     "start": "node app.js",
     "build": "webpack --progress --colors -p",

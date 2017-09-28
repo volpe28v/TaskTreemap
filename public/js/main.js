@@ -2,6 +2,12 @@
 var taskTreemap  = require("./task_treemap");
 var taskTextarea = require("./task_textarea");
 
+var socket = require('socket.io-client')('/', {});
+
+socket.on('connect', function() {
+  console.log("connected socket.io");
+});
+
 var router = new VueRouter({
   mode: 'history',
   routes: []
@@ -17,6 +23,7 @@ new Vue({
       taskLine: 0,
       id: this.$route.query.id,
       initialText: "",
+      socket: socket,
     }
   },
 
