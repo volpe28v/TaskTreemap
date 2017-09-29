@@ -5,11 +5,8 @@ var path = require('path');
 var bodyParser = require('body-parser');
 
 var io = require('socket.io').listen(server,{ 'destroy buffer size': Infinity });
-io.set("log level", 1);
-
 var index_socket = require('./lib/index_socket');
 index_socket.setup(io);
-
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({extended: true}));
