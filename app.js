@@ -34,28 +34,6 @@ Promise.all([
 });
 
 function startServer(){
-  app.post('/getData', function (req, res) {
-    console.log("getData");
-    console.log(req.body);
-    var id = req.body.id;
-
-    tasktreemap_db.find(id)
-      .then(function(result){
-        console.log(result);
-        res.send(result);
-      });
-  });
-
-  app.post('/saveData', function (req, res) {
-    console.log("saveData");
-    console.log(req.body);
-
-    tasktreemap_db.save(req.body)
-      .then(function(result){
-        res.send("save ok");
-      });
-  });
-
   server.listen(app.get('port'), function () {
     console.log('TaskTreeMap listening on port ' + app.get('port'));
   });
