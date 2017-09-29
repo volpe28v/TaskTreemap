@@ -30,7 +30,7 @@ $ npm install
 
 ### Build
 ```
-$ webpack
+$ npm run build
 ```
 
 ### Run
