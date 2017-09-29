@@ -21,6 +21,7 @@ var taskTextarea = Vue.component('task-textarea',{
       doing_sizes: 0,
       done_sizes: 0,
       text: "",
+      preText: "",
 
       sepaMode: this.judgeSepaMode(""),
       editor: null,
@@ -65,9 +66,12 @@ var taskTextarea = Vue.component('task-textarea',{
     }else{
       // id に紐づくデータをサーバから取得する
       self.socket.on("id_" + self.id, function(data){
-        console.log("id_" + self.id);
-        console.log(data);
+        self.preText = data.text;
+
+        var cursor = self.editor.selection.getCursor();
         self.editor.setValue(data.text, -1)
+        self.editor.gotoLine(cursor.row + 1, self.beforeCursor.column);
+        self.editor.focus();
       });
 
       self.socket.emit('get_data', {id: self.id});
@@ -80,21 +84,16 @@ var taskTextarea = Vue.component('task-textarea',{
     self.editor.$blockScrolling = Infinity;
     self.editor.session.setOptions({ tabSize: 2, useSoftTabs: false});
     self.editor.on('change', function(){
+      self.text = self.editor.getValue();
+      self.updateText();
+
       clearTimeout(self.saveTimer);
       self.saveTimer = setTimeout(function(){
-        var newText = self.editor.getValue();
-        var oldText = self.text;
-
-        if (newText != oldText){
-          console.log("saveText");
-          console.log("1 : " + newText);
-          console.log("2 : " + oldText);
-          self.text = newText;
+        if (self.text != self.preText){
+          self.preText = self.text;
           self.saveText();
-        }else{
-          self.updateText();
         }
-      }, 1000);
+      }, 500);
     });
 
     self.editor.session.selection.on("changeCursor" , function(e){
@@ -116,11 +115,7 @@ var taskTextarea = Vue.component('task-textarea',{
       if (self.id == null){
         self.setTextToLocalStorage(self.text);
       }else{
-        //clearTimeout(self.saveTimer);
-        //self.saveTimer = setTimeout(function(){
-          console.log("saved");
-          self.socket.emit('save_data', {id: self.id, text: self.text});
-        //}, 1000);
+        self.socket.emit('save_data', {id: self.id, text: self.text});
       }
     },
 
