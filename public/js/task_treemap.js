@@ -192,7 +192,7 @@ var taskTreemap = Vue.component('task-treemap',{
       // 更新処理
       d3.select("#treemap").selectAll("div")
         .attr("class", "task-elem")
-        .attr("title", function(d) { return d.name + (d.assignee ? " [" + d.assignee + "]" : ""); })
+        .attr("title", function(d) { return d.name + " (" + d.size + ")" + (d.assignee ? " [" + d.assignee + "]" : ""); })
         .style("left", function(d) { return d.x + "px"; })
         .style("top", function(d) { return d.y + "px"; })
         .style("width", function(d) { return d.dx-6 + "px"; })
