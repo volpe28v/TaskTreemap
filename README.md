@@ -1,5 +1,5 @@
 # TaskTreemap 
-タスクの規模と進捗を Treemap で可視化する
+テキスト入力でお手軽にタスクの規模と進捗を Treemap で可視化する
 
 ### デモページ
 https://tasktreemap.herokuapp.com/?id=demo
