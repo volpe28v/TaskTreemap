@@ -26,6 +26,11 @@ https://tasktreemap.herokuapp.com/?id=demo
 * socket.io
 
 ### Ready
+必要なもの
+
+* node.js
+* mongodb
+
 ```
 $ npm install
 ```
@@ -39,3 +44,9 @@ $ npm run build
 ```
 $ npm run start
 ```
+
+### Access
+http://localhost:3000/?id=page_name
+
+page_name: 任意のページ名文字列
+
