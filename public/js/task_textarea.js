@@ -205,6 +205,8 @@ var taskTextarea = Vue.component('task-textarea',{
       var self = this;
       if(child.status != null && child.status.match(/Doing/i)){
         self.markerIds.push(self.editor.session.addMarker(new Range(i, 0, i, 100), "doing-text", "fullLine"));
+      }else if (child.status != null && child.status.match(/Waiting/i)){
+        self.markerIds.push(self.editor.session.addMarker(new Range(i, 0, i, 100), "waiting-text", "fullLine"));
       }else if (child.status == null || !child.status.match(/Done/i)){
         self.markerIds.push(self.editor.session.addMarker(new Range(i, 0, i, 100), "todo-text", "fullLine"));
       }

@@ -151,6 +151,13 @@ textarea {
   z-index:20
 }
 
+.waiting-text {
+  position:absolute;
+  background:rgba(148,95,79,0.5);
+  z-index:20
+}
+
+
 @media screen and (max-width: 700px) {
   #app {
     flex-direction: column;

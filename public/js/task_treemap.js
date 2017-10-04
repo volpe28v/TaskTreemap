@@ -19,6 +19,7 @@ var taskTreemap = Vue.component('task-treemap',{
       draggingItem: null,
       hideDone: false,
       selectedUser: null,
+      longClickTimer: null,
     }
   },
 
@@ -54,6 +55,7 @@ var taskTreemap = Vue.component('task-treemap',{
       if (status == null){ return todo_color; }
       if (status.match(/Done/i)){ return "#666666"; }
       if (status.match(/Doing/i)){ return "#149bdf"; }
+      if (status.match(/Waiting/i)){ return "#945F4F"; }
       return todo_color; //Todo or other
     },
 
@@ -162,7 +164,6 @@ var taskTreemap = Vue.component('task-treemap',{
             {
               tasks: tasks
             });
-
         })
         .on("dragover",function(d){
           d3.event.preventDefault();
@@ -183,7 +184,25 @@ var taskTreemap = Vue.component('task-treemap',{
             {
               tasks: tasks
             });
-        });
+        })
+        .on("mousedown",function(d){
+          self.longClickTimer = setTimeout(function(){
+            console.log("long click!");
+            d.status = "Waiting";
+
+            var tasks = {
+              "children": null
+            }
+
+            tasks.children = children;
+            self.$emit('update-tasks',
+              {
+                tasks: tasks
+              });
+          },1000);
+        })
+        .on("mouseup", function(d){ clearTimeout(self.longClickTimer); })
+        .on("mouseout",function(d){ clearTimeout(self.longClickTimer); });
  
       // div 削除処理
       task_tree.exit()
