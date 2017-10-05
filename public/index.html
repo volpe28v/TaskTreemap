@@ -14,13 +14,17 @@
         v-on:update-tasks="updateTextTasks"
         v-on:select-task="selectTask">
       </task-treemap>
-      <task-textarea class="rightpane"
-        :id="id"
-        :tasks="textTasks"
-        :line="taskLine"
-        :socket="socket"
-        v-on:update-tasks="updateTasks">
-      </task-treemap>
+      <div class="rightpane">
+        <task-textarea class="text-area"
+                       :id="id"
+                       :tasks="textTasks"
+                       :line="taskLine"
+                       :socket="socket"
+                       v-on:update-tasks="updateTasks">
+        </task-textarea>
+        <burn-down class="burn-down">
+        </burn-down>
+      </div>
     </div>
 
     <script src="https://d3js.org/d3.v3.min.js"></script>

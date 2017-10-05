@@ -4,10 +4,21 @@ html,body {
   background: #333;
 }
 
-#treemap{
+#treemap {
   flex: 1;
   position: relative;
 }
+
+#burndown {
+  flex: 2;
+  position: relative;
+}
+
+#burndown_editor {
+  flex: 1;
+  position: relative;
+}
+
 
 #app {
   display: flex;
@@ -24,6 +35,18 @@ html,body {
   flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+.text-area {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.burn-down {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
 }
 
 .task-elem {
@@ -155,6 +178,30 @@ textarea {
   position:absolute;
   background:rgba(148,95,79,0.5);
   z-index:20
+}
+
+.axis path,
+.axis line {
+	fill: none;
+	stroke: #aaa;
+	shape-rendering: crispEdges;
+}
+
+.axis text {
+  fill: #aaa;
+  font-size: 11px;
+}
+
+.line {
+	fill: none;
+	stroke: steelblue;
+	stroke-width: 1.5px;
+}
+
+.actual-line {
+	fill: none;
+	stroke: red;
+	stroke-width: 1.5px;
 }
 
 
