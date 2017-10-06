@@ -4,9 +4,12 @@ var burnDown = Vue.component('burn-down',{
     <div id="burndown_editor"></div>\
   </div>',
 
+  props: ['id','socket'],
+
   data: function(){
     return {
       text: "",
+      preText: "",
       idealData: [],
       actualData: [],
       maxSum: 0,
@@ -16,6 +19,24 @@ var burnDown = Vue.component('burn-down',{
   mounted: function(){
     var self = this;
     self.addResizeHandler();
+
+    if (self.id == null){
+      self.text = [
+        "5",
+        "1562/1562",
+        "1282/1562",
+        "1100/1562",
+      ].join("\n");
+    }else{
+      // id に紐づくデータをサーバから取得する
+      self.socket.on("burn_" + self.id, function(data){
+        if (data == null) return;
+        self.preText = data.text;
+        self.editor.setValue(data.text, -1)
+      });
+
+      self.socket.emit('get_burn', {id: self.id});
+    }
 
     self.editor = ace.edit("burndown_editor");
     self.editor.setTheme("ace/theme/chaos");
@@ -27,23 +48,14 @@ var burnDown = Vue.component('burn-down',{
       self.parseText(self.text.split("\n"));
       self.update();
 
-      /*
       clearTimeout(self.saveTimer);
       self.saveTimer = setTimeout(function(){
         if (self.text != self.preText){
           self.preText = self.text;
-          self.saveText();
+          self.socket.emit('save_burn', {id: self.id, text: self.text});
         }
       }, 500);
-      */
     });
-
-    self.text = [
-      "5",
-      "1562/1562",
-      "1282/1562",
-      "1100/1562",
-    ].join("\n");
 
     self.editor.setValue(self.text, -1)
   },

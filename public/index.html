@@ -22,7 +22,9 @@
                        :socket="socket"
                        v-on:update-tasks="updateTasks">
         </task-textarea>
-        <burn-down class="burn-down">
+        <burn-down class="burn-down"
+                       :id="id"
+                       :socket="socket">
         </burn-down>
       </div>
     </div>

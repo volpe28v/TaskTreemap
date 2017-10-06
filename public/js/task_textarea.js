@@ -66,6 +66,7 @@ var taskTextarea = Vue.component('task-textarea',{
     }else{
       // id に紐づくデータをサーバから取得する
       self.socket.on("id_" + self.id, function(data){
+        if (data == null) return;
         self.preText = data.text;
 
         var cursor = self.editor.selection.getCursor();

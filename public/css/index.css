@@ -195,13 +195,13 @@ textarea {
 .line {
 	fill: none;
 	stroke: steelblue;
-	stroke-width: 1.5px;
+	stroke-width: 1.0px;
 }
 
 .actual-line {
 	fill: none;
-	stroke: red;
-	stroke-width: 1.5px;
+	stroke: green;
+	stroke-width: 2.5px;
 }
 
 

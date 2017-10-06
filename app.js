@@ -24,12 +24,14 @@ app.set('port', program.port || process.env.PORT || 3000);
 
 var mongo_builder = require('./lib/mongo_builder');
 var tasktreemap_db = require("./lib/tasktreemap_db");
+var burndown_db = require("./lib/burndown_db");
 
 Promise.all([
   mongo_builder.ready(app.get('db_name'))
 ])
 .then(function(results){
   tasktreemap_db.set_db(results[0]);
+  burndown_db.set_db(results[0]);
   startServer();
 });
 
