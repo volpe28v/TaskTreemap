@@ -12,11 +12,14 @@ html,body {
 #burndown {
   flex: 2;
   position: relative;
+  background: #161616;
+  margin-top: 3px;
 }
 
 #burndown_editor {
   flex: 1;
   position: relative;
+  margin-top: 3px;
 }
 
 

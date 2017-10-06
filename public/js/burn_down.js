@@ -1,7 +1,7 @@
 var burnDown = Vue.component('burn-down',{
   template: '<div>\
-    <div id="burndown"></div>\
     <div id="burndown_editor"></div>\
+    <div id="burndown"></div>\
   </div>',
 
   props: ['id','socket'],
@@ -58,6 +58,7 @@ var burnDown = Vue.component('burn-down',{
     });
 
     self.editor.setValue(self.text, -1)
+    self.update();
   },
 
   methods: {
