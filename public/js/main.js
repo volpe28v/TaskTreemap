@@ -22,6 +22,7 @@ new Vue({
       tasks: null,
       textTasks: null,
       taskLine: 0,
+      progress: null,
       id: this.$route.query.id,
       initialText: "",
       socket: socket,
@@ -40,17 +41,20 @@ new Vue({
     selectTask: function(params){
       this.taskLine = params.no;
     },
-    setTaskLine: function(tasks){
-      var cursor_task = tasks.children.filter(function(task){ return task.cursor == true; })[0];
+    setTaskLine: function(params){
+      var cursor_task = params.children.filter(function(task){ return task.cursor == true; })[0];
       if (cursor_task){
         this.taskLine = cursor_task.i;
         return;
       }
 
-      if (tasks.line){
-        this.taskLine = tasks.line;
+      if (params.line){
+        this.taskLine = params.line;
         return;
       }
+    },
+    updateProgress: function(params){
+      this.progress = params.progress;
     }
   }
 });

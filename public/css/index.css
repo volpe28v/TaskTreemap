@@ -16,12 +16,22 @@ html,body {
   margin-top: 3px;
 }
 
-#burndown_editor {
+#burndown_left {
   flex: 1;
-  position: relative;
+  display: flex;
+  flex-direction: column;
   margin-top: 3px;
 }
 
+#burndown_apply {
+  background: #161616;
+  padding: 2px 5px;
+}
+
+#burndown_editor {
+  flex: 1;
+  position: relative;
+}
 
 #app {
   display: flex;
@@ -204,6 +214,12 @@ textarea {
 .actual-line {
 	fill: none;
 	stroke: green;
+	stroke-width: 2.5px;
+}
+
+.latest-line {
+	fill: none;
+	stroke: yellow;
 	stroke-width: 2.5px;
 }
 

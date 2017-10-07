@@ -1,42 +1,58 @@
 var burnDown = Vue.component('burn-down',{
   template: '<div>\
-    <div id="burndown_editor"></div>\
+    <div id="burndown_left">\
+      <div id="burndown_apply">\
+        <button v-on:click="applyProgress" v-show="isApplyButtonEnabled">{{applyText}}</button>\
+      </div>\
+      <div id="burndown_editor"></div>\
+    </div>\
     <div id="burndown"></div>\
   </div>',
 
-  props: ['id','socket'],
+  props: ['id','progress','socket'],
 
   data: function(){
     return {
-      text: "",
       preText: "",
+      sprintNum: 0,
       idealData: [],
       actualData: [],
+      latestData: [],
       maxSum: 0,
+      applyText: "",
+      DefaultSprintNum: 4
     }
   },
  
+  computed: {
+    isApplyButtonEnabled: function(){
+      var self = this;
+      if (self.progress == null) return false;
+      if (self.progress.total == 0) return false;
+      if (self.isFinished()) return false;
+      return true;
+    },
+  },
+
+  watch: {
+    progress: function(){
+      var self = this;
+      if (self.progress == null) return;
+
+      var text = self.editor.getValue();
+      if (text == ""){
+        self.editor.setValue("" + self.DefaultSprintNum, -1)
+      }else{
+        var text = self.editor.getValue();
+        self.parseText(text.split("\n"));
+        self.update();
+      }
+    },
+  },
+
   mounted: function(){
     var self = this;
     self.addResizeHandler();
-
-    if (self.id == null){
-      self.text = [
-        "5",
-        "1562/1562",
-        "1282/1562",
-        "1100/1562",
-      ].join("\n");
-    }else{
-      // id に紐づくデータをサーバから取得する
-      self.socket.on("burn_" + self.id, function(data){
-        if (data == null) return;
-        self.preText = data.text;
-        self.editor.setValue(data.text, -1)
-      });
-
-      self.socket.emit('get_burn', {id: self.id});
-    }
 
     self.editor = ace.edit("burndown_editor");
     self.editor.setTheme("ace/theme/chaos");
@@ -44,21 +60,41 @@ var burnDown = Vue.component('burn-down',{
     self.editor.$blockScrolling = Infinity;
     self.editor.session.setOptions({ tabSize: 2, useSoftTabs: false});
     self.editor.on('change', function(){
-      self.text = self.editor.getValue();
-      self.parseText(self.text.split("\n"));
+      var text = self.editor.getValue();
+      self.parseText(text.split("\n"));
       self.update();
 
       clearTimeout(self.saveTimer);
       self.saveTimer = setTimeout(function(){
-        if (self.text != self.preText){
-          self.preText = self.text;
-          self.socket.emit('save_burn', {id: self.id, text: self.text});
+        var text = self.editor.getValue();
+        if (text != self.preText){
+          self.preText = text;
+          self.socket.emit('save_burn', {id: self.id, text: text});
         }
       }, 500);
     });
 
-    self.editor.setValue(self.text, -1)
-    self.update();
+    if (self.id == null){
+      var text = [
+        "5",
+        "1562/1562",
+        "1282/1562",
+        "1100/1562",
+      ].join("\n");
+      self.editor.setValue(text, -1)
+    }else{
+      // id に紐づくデータをサーバから取得する
+      self.socket.on("burn_" + self.id, function(data){
+        var text = "";
+        if (data != null){
+          text = data.text;
+        }
+        self.preText = text;
+        self.editor.setValue(text, -1)
+      });
+
+      self.socket.emit('get_burn', {id: self.id});
+    }
   },
 
   methods: {
@@ -83,13 +119,20 @@ var burnDown = Vue.component('burn-down',{
       var sprintReg = /(\d+)/;
       var valueReg = /(\d+)\/(\d+)/;
 
+      self.maxSum = 0;
+      self.idealData = [];
+      self.actualData = [];
+
       var sprintMatched = text[0].match(sprintReg);
-      if (sprintMatched == null){ return; }
-      var sprintNum = parseInt(sprintMatched[1]);
+      self.sprintNum = 0;
+      if (sprintMatched != null){
+        self.sprintNum = parseInt(sprintMatched[1]);
+      }else{
+        return;
+      }
 
       var lastSum = 0;
       var actuals = [];
-      self.maxSum = 0;
       for (var i = 1; i < text.length; i++){
         var matched = text[i].match(valueReg);
         if (matched == null){ continue; }
@@ -98,12 +141,17 @@ var burnDown = Vue.component('burn-down',{
         if (self.maxSum < lastSum){ self.maxSum = lastSum; }
       }
 
-      self.idealData = [];
-      self.actualData = [];
-      for (var i = 0; i <= sprintNum; i++){
+      if (self.progress != null){
+        lastSum = self.progress.total;
+        if (self.progress.total > self.maxSum){
+          self.maxSum = self.progress.total;
+        }
+      }
+
+      for (var i = 0; i <= self.sprintNum; i++){
         self.idealData.push({
           sprint: i,
-          value: lastSum - (lastSum / sprintNum * i)
+          value: lastSum - (lastSum / self.sprintNum * i)
         });
 
         if (actuals[i] != null){
@@ -112,6 +160,30 @@ var burnDown = Vue.component('burn-down',{
             value: actuals[i]
           })
         }
+      }
+
+      self.latestData = [];
+      if (self.progress != null && self.actualData.length > 0){
+        var lastActual = self.actualData[self.actualData.length-1];
+        if (lastActual.sprint < self.sprintNum){
+          self.latestData = [
+            {
+              sprint: lastActual.sprint,
+              value: lastActual.value,
+            },
+            {
+              sprint: lastActual.sprint + 1,
+              value: self.progress.remaining,
+            }
+          ];
+        }
+      }
+
+      if (self.actualData.length > 0){
+        var lastActual = self.actualData[self.actualData.length-1];
+        self.applyText = "Apply to " + (lastActual.sprint + 1) + " sprint";
+      }else{
+        self.applyText = "Apply to initial plan";
       }
     },
 
@@ -175,6 +247,7 @@ var burnDown = Vue.component('burn-down',{
         .attr("dy", ".71em")
         .style("text-anchor", "end")
 
+      if (self.idealData.length == 0) return;
       svg.append("path")
         .datum(self.idealData)
         .attr("class", "line")
@@ -185,6 +258,27 @@ var burnDown = Vue.component('burn-down',{
         .attr("class", "actual-line")
         .attr("d", line);
 
+      svg.append("path")
+        .datum(self.latestData)
+        .attr("class", "latest-line")
+        .attr("d", line);
+    },
+
+    applyProgress: function(){
+      var self = this;
+      var textArray = self.editor.getValue().trim().split("\n");
+      textArray.push(self.progress.remaining + "/" + self.progress.total);
+      self.editor.setValue(textArray.join("\n"), -1)
+    },
+
+    isFinished: function(){
+      var self = this;
+      if (self.actualData.length > 0){
+        var lastActual = self.actualData[self.actualData.length-1];
+        return lastActual.sprint >= self.sprintNum;
+      }else{
+        return false;
+      }
     }
 	}
 });

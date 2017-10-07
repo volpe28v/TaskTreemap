@@ -10,9 +10,9 @@
   <body>
     <div id="app">
       <task-treemap class="leftpane"
-        :tasks="tasks"
-        v-on:update-tasks="updateTextTasks"
-        v-on:select-task="selectTask">
+                    :tasks="tasks"
+                    v-on:update-tasks="updateTextTasks"
+                    v-on:select-task="selectTask">
       </task-treemap>
       <div class="rightpane">
         <task-textarea class="text-area"
@@ -20,10 +20,13 @@
                        :tasks="textTasks"
                        :line="taskLine"
                        :socket="socket"
-                       v-on:update-tasks="updateTasks">
+                       v-on:update-tasks="updateTasks"
+                       v-on:update-progress="updateProgress"
+                       >
         </task-textarea>
         <burn-down class="burn-down"
                        :id="id"
+                       :progress="progress"
                        :socket="socket">
         </burn-down>
       </div>

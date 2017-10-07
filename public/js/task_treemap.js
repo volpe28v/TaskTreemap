@@ -187,7 +187,6 @@ var taskTreemap = Vue.component('task-treemap',{
         })
         .on("mousedown",function(d){
           self.longClickTimer = setTimeout(function(){
-            console.log("long click!");
             d.status = "Waiting";
 
             var tasks = {

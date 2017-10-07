@@ -159,6 +159,14 @@ var taskTextarea = Vue.component('task-textarea',{
       self.todo_sizes = self.getSizes(todo);
       self.doing_sizes = self.getSizes(doing);
       self.done_sizes = self.getSizes(done);
+
+      self.$emit('update-progress',
+        {
+          progress: {
+            remaining: self.todo_sizes,
+            total: self.sizes
+          }
+        });
     },
 
     updateText: function(){
