@@ -212,7 +212,8 @@ var burnDown = Vue.component('burn-down',{
 			// 軸の定義
 			var xAxis = d3.svg.axis()
 				.scale(x)
-				.orient("bottom");
+				.orient("bottom")
+        .ticks(self.sprintNum);
 
 			var yAxis = d3.svg.axis()
 				.scale(y)
