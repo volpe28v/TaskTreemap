@@ -4,7 +4,7 @@
 ### デモページ
 https://tasktreemap.herokuapp.com/?id=demo
 
-![demo](https://user-images.githubusercontent.com/754962/31043080-a34dab70-a5f0-11e7-8861-38211a53da11.png)
+![demo](https://user-images.githubusercontent.com/754962/31309695-6f01333e-abc5-11e7-89fc-4f7976a3ae05.png)
 
 ### Usage
 * URL に ?id=hoge を追加すると新規ページが作成され、同ページを開いているブラウザに更新がリアルタイムに反映される
@@ -20,6 +20,15 @@ https://tasktreemap.herokuapp.com/?id=demo
 |タスク2|40|Doing|ふがさん|
 |タスク3|50|Done||
 |タスク4|60|||
+
+### バーンダウンチャートフォーマット
+|要素|説明|
+|---|---|
+|4|スプリント数|
+|785/785|初期計画規模 [残り]/[総数]|
+|585/785|1スプリント規模 [残り]/[総数]|
+|517/785|2スプリント規模 [残り]/[総数]|
+|   :   ||
 
 ### Technology
 * Vue.js
