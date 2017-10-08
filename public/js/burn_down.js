@@ -18,6 +18,8 @@ var burnDown = Vue.component('burn-down',{
       idealData: [],
       actualData: [],
       latestData: [],
+      addedData: [],
+      doneData: [],
       maxSum: 0,
       applyText: "",
       DefaultSprintNum: 4
@@ -122,6 +124,8 @@ var burnDown = Vue.component('burn-down',{
       self.maxSum = 0;
       self.idealData = [];
       self.actualData = [];
+      self.addedData = [];
+      self.doneData = [];
 
       var sprintMatched = text[0].match(sprintReg);
       self.sprintNum = 0;
@@ -133,11 +137,13 @@ var burnDown = Vue.component('burn-down',{
 
       var lastSum = 0;
       var actuals = [];
+      var sums = [];
       for (var i = 1; i < text.length; i++){
         var matched = text[i].match(valueReg);
         if (matched == null){ continue; }
         actuals.push(parseInt(matched[1]));
         lastSum = parseInt(matched[2]);
+        sums.push(lastSum);
         if (self.maxSum < lastSum){ self.maxSum = lastSum; }
       }
 
@@ -159,6 +165,18 @@ var burnDown = Vue.component('burn-down',{
             sprint: i,
             value: actuals[i]
           })
+
+          // 追加・完了を算出
+          if (i >= 1){
+            self.addedData.push({
+              sprint: i,
+              value: sums[i] - sums[i-1],
+            });
+            self.doneData.push({
+              sprint: i,
+              value: actuals[i-1] + (sums[i] - sums[i-1]) - actuals[i],
+            });
+          }
         }
       }
 
@@ -166,16 +184,27 @@ var burnDown = Vue.component('burn-down',{
       if (self.progress != null && self.actualData.length > 0){
         var lastActual = self.actualData[self.actualData.length-1];
         if (lastActual.sprint < self.sprintNum){
+          var curretSprint = lastActual.sprint + 1;
           self.latestData = [
             {
               sprint: lastActual.sprint,
               value: lastActual.value,
             },
             {
-              sprint: lastActual.sprint + 1,
+              sprint: curretSprint,
               value: self.progress.remaining,
             }
           ];
+
+          self.addedData.push({
+            sprint: curretSprint,
+            value: self.progress.total - sums[lastActual.sprint],
+          });
+          self.doneData.push({
+            sprint: curretSprint,
+            value: actuals[lastActual.sprint] + (self.progress.total - sums[lastActual.sprint]) - self.progress.remaining,
+          });
+
         }
       }
 
@@ -249,6 +278,25 @@ var burnDown = Vue.component('burn-down',{
         .style("text-anchor", "end")
 
       if (self.idealData.length == 0) return;
+
+      svg.selectAll(".bar")
+        .data(self.addedData)
+        .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function(d) { return x(d.sprint) - 10; })
+        .attr("width", 10)
+        .attr("y", function(d) { return y(d.value); })
+        .attr("height", function(d) { return height - y(d.value); });
+
+      svg.selectAll(".done-bar")
+        .data(self.doneData)
+        .enter().append("rect")
+        .attr("class", "done-bar")
+        .attr("x", function(d) { return x(d.sprint); })
+        .attr("width", 10)
+        .attr("y", function(d) { return y(d.value); })
+        .attr("height", function(d) { return height - y(d.value); });
+
       svg.append("path")
         .datum(self.idealData)
         .attr("class", "line")
@@ -263,6 +311,8 @@ var burnDown = Vue.component('burn-down',{
         .datum(self.latestData)
         .attr("class", "latest-line")
         .attr("d", line);
+
+
     },
 
     applyProgress: function(){

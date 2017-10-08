@@ -224,6 +224,14 @@ textarea {
 }
 
 
+.bar {
+  fill: rgba(214,90,6,0.5);
+}
+
+.done-bar{
+  fill: rgba(102,102,102,0.5);
+}
+
 @media screen and (max-width: 700px) {
   #app {
     flex-direction: column;
