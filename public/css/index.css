@@ -207,29 +207,29 @@ textarea {
 
 .line {
 	fill: none;
-	stroke: steelblue;
+	stroke: rgba(170, 170, 170, 0.8);
 	stroke-width: 1.0px;
 }
 
 .actual-line {
 	fill: none;
-	stroke: green;
+	stroke: rgba(106, 164, 62, 0.8);
 	stroke-width: 2.5px;
 }
 
 .latest-line {
 	fill: none;
-	stroke: yellow;
+	stroke: rgba(20, 155, 223, 0.8);
 	stroke-width: 2.5px;
 }
 
 
 .bar {
-  fill: rgba(214,90,6,0.5);
+  fill: rgba(148, 95, 79, 1.0)
 }
 
 .done-bar{
-  fill: rgba(102,102,102,0.5);
+  fill: rgba(102,102,102,0.8);
 }
 
 @media screen and (max-width: 700px) {

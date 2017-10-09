@@ -311,8 +311,6 @@ var burnDown = Vue.component('burn-down',{
         .datum(self.latestData)
         .attr("class", "latest-line")
         .attr("d", line);
-
-
     },
 
     applyProgress: function(){
