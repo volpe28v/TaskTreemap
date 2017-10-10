@@ -26,6 +26,12 @@ html,body {
 #burndown_apply {
   background: #161616;
   padding: 2px 5px;
+  font-size: 12px;
+}
+
+#burndown_apply a {
+  color: gray;
+  text-decoration: none;
 }
 
 #burndown_editor {
@@ -161,6 +167,15 @@ html,body {
 .task-info {
   color: white;
   padding: 2px 5px;
+}
+
+.editor-footer {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 12px;
+  color: gray;
+  background: #161616;
+  padding-right: 5px;
 }
 
 textarea {

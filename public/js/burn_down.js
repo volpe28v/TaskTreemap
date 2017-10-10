@@ -2,7 +2,7 @@ var burnDown = Vue.component('burn-down',{
   template: '<div>\
     <div id="burndown_left">\
       <div id="burndown_apply">\
-        <button v-on:click="applyProgress" v-show="isApplyButtonEnabled">{{applyText}}</button>\
+        <a class="apply-progress" href="#" v-on:click="applyProgress" v-show="isApplyButtonEnabled">{{applyText}}</a>\
       </div>\
       <div id="burndown_editor"></div>\
     </div>\

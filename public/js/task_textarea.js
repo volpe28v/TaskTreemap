@@ -3,8 +3,9 @@ var Range = ace.require('ace/range').Range;
 
 var taskTextarea = Vue.component('task-textarea',{
   template: '<div>\
-    <div class="task-info">残り {{todo_count}}/{{ count }} タスク. {{todo_sizes}}/{{ sizes }} 規模. [{{sepaMode.mode}}]</div>\
+    <div class="task-info">残り {{todo_count}}/{{ count }} タスク. {{todo_sizes}}/{{ sizes }} 規模.</div>\
     <div id="editor"></div>\
+    <div class="editor-footer">Delimiter [{{sepaMode.mode}}]</div>\
   </div>',
 
   props: ['tasks','line','id','socket'],
