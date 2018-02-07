@@ -81,6 +81,7 @@ var taskTextarea = Vue.component('task-textarea',{
 
     // ade editor setting
     self.editor = ace.edit("editor");
+    self.editor.setOption("showPrintMargin", false);
     self.editor.setTheme("ace/theme/chaos");
     self.editor.getSession().setUseWrapMode(true);
     self.editor.$blockScrolling = Infinity;

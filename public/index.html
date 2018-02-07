@@ -8,14 +8,58 @@
     <link href="css/index.css" media="screen" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <div id="app">
-      <task-treemap class="leftpane"
-                    :tasks="tasks"
-                    v-on:update-tasks="updateTextTasks"
-                    v-on:select-task="selectTask">
-      </task-treemap>
-      <div class="rightpane">
-        <task-textarea class="text-area"
+    <div id="app" @click.alt="changeView">
+      <div class="wrapper" v-if="viewMode== 1">
+        <task-treemap class="treemap-area"
+                                       :tasks="tasks"
+                                       :trigger="updateTrigger"
+                                       v-on:update-tasks="updateTextTasks"
+                                       v-on:select-task="selectTask">
+        </task-treemap>
+        <div class="rightpane">
+          <task-textarea class="text-area"
+                         :id="id"
+                         :tasks="textTasks"
+                         :line="taskLine"
+                         :socket="socket"
+                         v-on:update-tasks="updateTasks"
+                         v-on:update-progress="updateProgress"
+                         >
+          </task-textarea>
+            <burn-down class="burn-down"
+                                         :id="id"
+                                         :progress="progress"
+                                         :socket="socket">
+            </burn-down>
+        </div>
+      </div>
+      <div class="wrapper" v-if="viewMode == 2">
+        <burn-down class="burn-down-large"
+                                           :id="id"
+                                           :progress="progress"
+                                           :socket="socket">
+        </burn-down>
+
+        <div class="rightpane">
+          <task-textarea class="text-area"
+                         :id="id"
+                         :tasks="textTasks"
+                         :line="taskLine"
+                         :socket="socket"
+                         v-on:update-tasks="updateTasks"
+                         v-on:update-progress="updateProgress"
+                         >
+          </task-textarea>
+            <task-treemap class="treemap-area"
+                                           :tasks="tasks"
+                                           :trigger="updateTrigger"
+                                           v-on:update-tasks="updateTextTasks"
+                                           v-on:select-task="selectTask">
+            </task-treemap>
+        </div>
+      </div>
+      <div class="wrapper" v-if="viewMode == 3">
+        <task-textarea class="text-area-left"
                        :id="id"
                        :tasks="textTasks"
                        :line="taskLine"
@@ -24,11 +68,20 @@
                        v-on:update-progress="updateProgress"
                        >
         </task-textarea>
-        <burn-down class="burn-down"
-                       :id="id"
-                       :progress="progress"
-                       :socket="socket">
-        </burn-down>
+
+        <div class="rightpane">
+          <task-treemap class="treemap-area-right"
+                        :tasks="tasks"
+                        :trigger="updateTrigger"
+                        v-on:update-tasks="updateTextTasks"
+                        v-on:select-task="selectTask">
+          </task-treemap>
+          <burn-down class="burn-down"
+                     :id="id"
+                     :progress="progress"
+                     :socket="socket">
+          </burn-down>
+        </div>
       </div>
     </div>
 

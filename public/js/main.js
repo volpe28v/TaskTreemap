@@ -26,6 +26,8 @@ new Vue({
       id: this.$route.query.id,
       initialText: "",
       socket: socket,
+      viewMode: 1,
+      updateTrigger: false,
     }
   },
 
@@ -55,6 +57,21 @@ new Vue({
     },
     updateProgress: function(params){
       this.progress = params.progress;
+    },
+    changeView: function(){
+      if (this.viewMode == 1){
+        this.viewMode = 2;
+      }else if (this.viewMode == 2){
+        this.viewMode = 3;
+      }else{
+        this.viewMode = 1;
+      }
+
+      var self = this;
+      setTimeout(function(){
+        self.updateTrigger = !self.updateTrigger;
+      },1);
+      return false;
     }
   }
 });

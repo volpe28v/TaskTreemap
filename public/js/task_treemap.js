@@ -10,7 +10,7 @@ var taskTreemap = Vue.component('task-treemap',{
     <div id="treemap"></div>\
   </div>',
 
-  props: ['tasks'],
+  props: ['tasks', 'trigger'],
 
   data: function(){
     return {
@@ -28,6 +28,9 @@ var taskTreemap = Vue.component('task-treemap',{
       this.setTasks();
     },
     hideDone: function(){
+      this.update();
+    },
+    trigger: function(){
       this.update();
     }
   },

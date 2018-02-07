@@ -4,6 +4,11 @@ html,body {
   background: #333;
 }
 
+.wrapper {
+  flex: 1;
+  display: flex;
+}
+
 #treemap {
   flex: 1;
   position: relative;
@@ -17,7 +22,7 @@ html,body {
 }
 
 #burndown_left {
-  flex: 1;
+  width: 150px;
   display: flex;
   flex-direction: column;
   margin-top: 3px;
@@ -45,11 +50,18 @@ html,body {
   overflow: hidden;
 }
 
-.leftpane {
+.treemap-area{
   flex: 2;
   display: flex;
   flex-direction: column;
 }
+
+.treemap-area-right{
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+}
+
 
 .rightpane {
   flex: 1;
@@ -63,8 +75,20 @@ html,body {
   flex-direction: column;
 }
 
+.text-area-left {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+}
+
 .burn-down {
   flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+.burn-down-large {
+  flex: 2;
   display: flex;
   flex-direction: row;
 }
