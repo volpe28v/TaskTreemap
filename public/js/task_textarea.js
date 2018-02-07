@@ -179,7 +179,7 @@ var taskTextarea = Vue.component('task-textarea',{
       var cursor = self.editor.selection.getCursor();
 
       self.clearMarkers();
-      var children = self.text.split("\n")
+      var children = self.text.split(/\r\n|\r|\n/)
         .map(function(row, i){
           var matched = row.match(self.sepaMode.reg);
           if (matched == null){ return null; }
