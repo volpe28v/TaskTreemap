@@ -119,7 +119,7 @@ var burnDown = Vue.component('burn-down',{
       var self = this;
 
       var sprintReg = /(\d+)/;
-      var valueReg = /(\d+)\/(\d+)/;
+      var valueReg = /([\d\.]+)\/([\d\.]+)/;
 
       self.maxSum = 0;
       self.idealData = [];
@@ -141,8 +141,8 @@ var burnDown = Vue.component('burn-down',{
       for (var i = 1; i < text.length; i++){
         var matched = text[i].match(valueReg);
         if (matched == null){ continue; }
-        actuals.push(parseInt(matched[1]));
-        lastSum = parseInt(matched[2]);
+        actuals.push(Number(matched[1]));
+        lastSum = Number(matched[2]);
         sums.push(lastSum);
         if (self.maxSum < lastSum){ self.maxSum = lastSum; }
       }
