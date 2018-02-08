@@ -142,7 +142,7 @@ var burnDown = Vue.component('burn-down',{
         var matched = text[i].match(valueReg);
         if (matched == null){ continue; }
         actuals.push(Number(matched[1]));
-        lastSum = Number(matched[1]);
+        lastSum = Number(matched[2]);
         sums.push(lastSum);
         if (self.maxSum < lastSum){ self.maxSum = lastSum; }
       }
