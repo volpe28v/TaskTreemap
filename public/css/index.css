@@ -236,31 +236,32 @@ textarea {
 .axis path,
 .axis line {
 	fill: none;
-	stroke: #aaa;
+	stroke: #ccc;
 	shape-rendering: crispEdges;
+	stroke-width: 1.5px;
 }
 
 .axis text {
-  fill: #aaa;
+  fill: #ccc;
   font-size: 11px;
 }
 
 .line {
 	fill: none;
-	stroke: rgba(170, 170, 170, 0.8);
-	stroke-width: 1.0px;
+  stroke: #ccc;
+	stroke-width: 1.5px;
 }
 
 .actual-line {
 	fill: none;
-	stroke: rgba(106, 164, 62, 0.8);
-	stroke-width: 2.5px;
+	stroke: rgba(136, 194, 92, 0.8);
+	stroke-width: 4.0px;
 }
 
 .latest-line {
 	fill: none;
-	stroke: rgba(20, 155, 223, 0.8);
-	stroke-width: 2.5px;
+	stroke: rgba(50, 185, 253, 0.8);
+	stroke-width: 4.0px;
 }
 
 
