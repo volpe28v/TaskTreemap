@@ -32,6 +32,7 @@ html,body {
   background: #161616;
   padding: 2px 5px;
   font-size: 12px;
+  height: 20px;
 }
 
 #burndown_apply a {

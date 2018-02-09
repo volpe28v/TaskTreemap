@@ -2,7 +2,7 @@ var burnDown = Vue.component('burn-down',{
   template: '<div>\
     <div id="burndown_left">\
       <div id="burndown_apply">\
-        <a class="apply-progress" href="#" v-on:click="applyProgress" v-show="isApplyButtonEnabled">{{applyText}}</a>\
+        <a class="apply-progress" href="#" v-on:click="applyProgress">{{applyText}}</a>\
       </div>\
       <div id="burndown_editor"></div>\
     </div>\
@@ -27,13 +27,6 @@ var burnDown = Vue.component('burn-down',{
   },
  
   computed: {
-    isApplyButtonEnabled: function(){
-      var self = this;
-      if (self.progress == null) return false;
-      if (self.progress.total == 0) return false;
-      if (self.isFinished()) return false;
-      return true;
-    },
   },
 
   watch: {
@@ -63,7 +56,7 @@ var burnDown = Vue.component('burn-down',{
     self.editor.session.setOptions({ tabSize: 2, useSoftTabs: false});
     self.editor.on('change', function(){
       var text = self.editor.getValue();
-      self.parseText(text.split("\n"));
+      self.parseText(text.split(/\r\n|\r|\n/));
       self.update();
 
       clearTimeout(self.saveTimer);
@@ -97,6 +90,8 @@ var burnDown = Vue.component('burn-down',{
 
       self.socket.emit('get_burn', {id: self.id});
     }
+
+    self.update();
   },
 
   methods: {
@@ -207,17 +202,12 @@ var burnDown = Vue.component('burn-down',{
 
         }
       }
-
-      if (self.actualData.length > 0){
-        var lastActual = self.actualData[self.actualData.length-1];
-        self.applyText = "Apply to " + (lastActual.sprint + 1) + " sprint";
-      }else{
-        self.applyText = "Apply to initial plan";
-      }
     },
 
     update: function(){
       var self = this;
+
+      self.setApplyText();
 
       // 初期化
       d3.select("#burndown").selectAll("svg").remove();
@@ -313,8 +303,33 @@ var burnDown = Vue.component('burn-down',{
         .attr("d", line);
     },
 
+    setApplyText: function(){
+      var self = this;
+
+      if (self.sprintNum == 0){
+        self.applyText = "Enter sprints number";
+      }
+      else if (self.isFinished()){
+        self.applyText = "Sprint finished";
+      }else{
+        if (self.actualData.length > 0){
+          var lastActual = self.actualData[self.actualData.length-1];
+          var currentSprint = lastActual.sprint + 1;
+          self.applyText = "Apply to " + currentSprint + " sprint" + (currentSprint > 1 ? "s": "");
+        }else{
+          self.applyText = "Apply to initial plan";
+        }
+      }
+    },
+
     applyProgress: function(){
       var self = this;
+
+      if (self.progress == null) return;
+      if (self.progress.total == 0) return;
+      if (self.sprintNum == 0) return;
+      if (self.isFinished()) return;
+
       var textArray = self.editor.getValue().trim().split("\n");
       textArray.push(self.progress.remaining + "/" + self.progress.total);
       self.editor.setValue(textArray.join("\n"), -1)
