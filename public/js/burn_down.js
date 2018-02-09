@@ -214,42 +214,43 @@ var burnDown = Vue.component('burn-down',{
 
       var div_height = document.getElementById("burndown").clientHeight;
       var div_width = document.getElementById("burndown").clientWidth;
-      
-			var margin = { top: 20, right: 20, bottom: 30, left: 50 },
-				width = div_width - margin.left - margin.right,
-				height = div_height - margin.top - margin.bottom;
 
-			// スケールと出力レンジの定義
-			var x = d3.scale.linear()
+      var margin = { top: 20, right: 20, bottom: 30, left: 50 },
+        width = div_width - margin.left - margin.right,
+        height = div_height - margin.top - margin.bottom;
+
+      // スケールと出力レンジの定義
+      var x = d3.scale.linear()
         .domain(d3.extent(self.idealData, function(d) { return d.sprint; }))
-				.range([0, width]);
+        .range([0, width]);
 
-			var y = d3.scale.linear()
+      var y = d3.scale.linear()
         .domain([0, self.maxSum])
-				.range([height, 0]);
+        .range([height, 0]);
 
-			// 軸の定義
-			var xAxis = d3.svg.axis()
-				.scale(x)
-				.orient("bottom")
+      // 軸の定義
+      var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom")
         .ticks(self.sprintNum);
 
-			var yAxis = d3.svg.axis()
-				.scale(y)
-				.orient("left");
+      var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left");
 
-			// 線の定義
-			var line = d3.svg.line()
-				.x(function(d) { return x(d.sprint); })
-				.y(function(d) { return y(d.value); });
+      // 線の定義
+      var line = d3.svg.line()
+        .x(function(d) { return x(d.sprint); })
+        .y(function(d) { return y(d.value); })
+        .interpolate("monotone");
 
 
-			// svgの定義
-			var svg = d3.select("#burndown").append("svg")
-				.attr("width", width + margin.left + margin.right)
-				.attr("height", height + margin.top + margin.bottom)
-				.append("g")
-				.attr("transform", "translate(" + margin.left + "," + margin.top + ")"); 
+      // svgの定義
+      var svg = d3.select("#burndown").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")"); 
 
       // x軸をsvgに表示
       svg.append("g")
