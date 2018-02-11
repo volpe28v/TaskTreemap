@@ -1,8 +1,9 @@
 var taskTreemap = Vue.component('task-treemap',{
   template: '<div>\
     <div class="task-info">\
-      <button v-on:click="hideDone=!hideDone">Done</button>\
-      残り規模 \
+      <input type="checkbox" id="done_check" v-model="showDone"><label style="font-size: 12px" for="done_check">Done</label>\
+      <button v-show="groupMode==\'status\'" v-on:click="groupMode=\'assignee\'">Assignee</button>\
+      <button v-show="groupMode==\'assignee\'" v-on:click="groupMode=\'status\'">Status</button>\
       <span class="user-info" v-for="user in users" draggable="true" @dragstart="dragstart(user, $event)" @dragend="dragend">\
         <span v-bind:class="user.class" v-on:click="selectUser(user)">{{user.name}} {{user.todo_sizes}}/{{user.sizes}}</span>\
       </span>\
@@ -17,9 +18,10 @@ var taskTreemap = Vue.component('task-treemap',{
       ColorMax: 9,
       users: [],
       draggingItem: null,
-      hideDone: false,
+      showDone: true,
       selectedUser: null,
       longClickTimer: null,
+      groupMode: 'assignee'
     }
   },
 
@@ -27,8 +29,13 @@ var taskTreemap = Vue.component('task-treemap',{
     tasks: function(){
       this.setTasks();
     },
-    hideDone: function(){
+    showDone: function(){
       this.update();
+      localStorage.showDone = this.showDone;
+    },
+    groupMode: function(){
+      this.update();
+      localStorage.groupMode = this.groupMode;
     },
     trigger: function(){
       this.update();
@@ -37,6 +44,7 @@ var taskTreemap = Vue.component('task-treemap',{
 
   mounted: function(){
     this.addResizeHandler();
+    this.loadFromLocalStorage();
   },
 
   methods: {
@@ -88,6 +96,10 @@ var taskTreemap = Vue.component('task-treemap',{
       // assignee ごとに children を生成
       var assignee_hash = { "": { id: 0, children: [] }};
       var assignee_id = 0;
+
+      // ステータス用のchildren を生成
+      var status_hash = { "": { id: 0, children: [] }};
+      var status_id = 0;
       children.forEach(function(child){
         var assignee = child.assignee != null ? child.assignee : "";
 
@@ -96,31 +108,20 @@ var taskTreemap = Vue.component('task-treemap',{
         }else{
           assignee_hash[assignee].children.push(child);
         }
+
+        var status = child.status;
+        if (status_hash[status] == null){
+          status_hash[status] = { id: ++status_id, children: [child]};
+        }else{
+          status_hash[status].children.push(child);
+        }
       });
-       
-      var tasks_node = {
-        "name": "root_dir",
-        "children": Object.keys(assignee_hash).map(function(key){
-          return {
-            "name": key,
-            "children": assignee_hash[key].children
-              .filter(function(child){
-                if (self.hideDone && child.status.match(/Done/i)){
-                  return false;
-                }else if (self.selectedUser != null && self.selectedUser.name != child.assignee) {
-                  return false;
-                }
-                return true;
-              })
-          }
-        })
-        .filter(function(child){
-          return child.children.length != 0;
-        })
-      }
+
+      var tasks_node_status = self.getNode(status_hash);
+      var tasks_node_assignee = self.getNode(assignee_hash);
 
       // アサインユーザ情報生成
-      self.users = tasks_node.children.map(function(child){
+      self.users = tasks_node_assignee.children.map(function(child){
         return {
           name: child.name,
           class: "assignee-list-elem task-assignee assignee-" + self.getColorNo(assignee_hash[child.name].id),
@@ -128,6 +129,14 @@ var taskTreemap = Vue.component('task-treemap',{
           todo_sizes: self.getSizes(child.children.filter(function(child){ return child.status == null || !child.status.match(/Done/i); })),
         };
       });
+
+      // treemap 描画用ノード
+      var treemap_node = null;
+      if (self.groupMode == "assignee"){
+        treemap_node = tasks_node_assignee;
+      }else{
+        treemap_node = tasks_node_status;
+      }
 
       // treemap 生成
       var height = document.getElementById("treemap").clientHeight;
@@ -144,7 +153,7 @@ var taskTreemap = Vue.component('task-treemap',{
       // treemap 要素生成
       var task_tree = d3.select("#treemap")
         .selectAll("div")
-        .data(treemap.nodes(tasks_node));
+        .data(treemap.nodes(treemap_node));
 
       // div 追加処理
       task_tree.enter()
@@ -244,6 +253,31 @@ var taskTreemap = Vue.component('task-treemap',{
           }
         });
     },
+
+    getNode: function(target_hash){
+      var self = this;
+      return {
+        "name": "root_dir",
+        "children": Object.keys(target_hash).map(function(key){
+          return {
+            "name": key,
+            "children": target_hash[key].children
+            .filter(function(child){
+              if (!self.showDone && child.status.match(/Done/i)){
+                return false;
+              }else if (self.selectedUser != null && self.selectedUser.name != child.assignee) {
+                return false;
+              }
+              return true;
+            })
+          }
+        })
+        .filter(function(child){
+          return child.children.length != 0;
+        })
+      }
+    },
+
     dragstart: function (user,e) {
       this.draggingItem = user;
       e.target.style.opacity = 0.5;
@@ -277,6 +311,12 @@ var taskTreemap = Vue.component('task-treemap',{
       self.update();
     },
 
+    loadFromLocalStorage: function(){
+      var self = this;
+
+      self.showDone = localStorage.showDone ? localStorage.showDone == 'true' : true;
+      self.groupMode = localStorage.groupMode ? localStorage.groupMode : 'assignee';
+    },
   }
 });
 

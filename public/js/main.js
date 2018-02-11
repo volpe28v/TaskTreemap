@@ -71,7 +71,6 @@ new Vue({
       setTimeout(function(){
         self.updateTrigger = !self.updateTrigger;
       },1);
-      return false;
     }
   }
 });
