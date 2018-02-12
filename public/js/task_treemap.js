@@ -1,7 +1,7 @@
 var taskTreemap = Vue.component('task-treemap',{
   template: '<div>\
     <div class="task-info">\
-      <input type="checkbox" id="done_check" v-model="showDone"><label style="font-size: 12px" for="done_check">Done</label>\
+      <input type="checkbox" id="done_check" v-model="showDone"><label style="font-size: 10px" for="done_check">Done</label>\
       <button v-show="groupMode==\'status\'" v-on:click="groupMode=\'assignee\'">Assignee</button>\
       <button v-show="groupMode==\'assignee\'" v-on:click="groupMode=\'status\'">Status</button>\
       <span class="user-info" v-for="user in users" draggable="true" @dragstart="dragstart(user, $event)" @dragend="dragend">\
