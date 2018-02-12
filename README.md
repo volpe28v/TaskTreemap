@@ -4,7 +4,8 @@
 ### デモページ
 https://tasktreemap.herokuapp.com/?id=demo
 
-![demo](https://user-images.githubusercontent.com/754962/31309695-6f01333e-abc5-11e7-89fc-4f7976a3ae05.png)
+![demo](https://user-images.githubusercontent.com/754962/36104915-9f668812-1056-11e8-8993-366010816837.png)
+
 
 ### Usage
 * URL に ?id=hoge を追加すると新規ページが作成され、同ページを開いているブラウザに更新がリアルタイムに反映される
