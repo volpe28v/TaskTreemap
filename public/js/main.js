@@ -31,18 +31,26 @@ new Vue({
     }
   },
 
+  mounted: function(){
+    var self = this;
+    self.viewMode = localStorage.viewMode ? localStorage.viewMode : 1;
+  },
+
   methods: {
     updateTasks: function(params){
       this.tasks = params.tasks;
       this.setTaskLine(params.tasks);
     },
+
     updateTextTasks: function(params){
       this.textTasks = params.tasks;
       this.setTaskLine(params.tasks);
     },
+
     selectTask: function(params){
       this.taskLine = params.no;
     },
+
     setTaskLine: function(params){
       var cursor_task = params.children.filter(function(task){ return task.cursor == true; })[0];
       if (cursor_task){
@@ -55,9 +63,11 @@ new Vue({
         return;
       }
     },
+
     updateProgress: function(params){
       this.progress = params.progress;
     },
+
     changeView: function(){
       if (this.viewMode == 1){
         this.viewMode = 2;
@@ -66,6 +76,8 @@ new Vue({
       }else{
         this.viewMode = 1;
       }
+
+      localStorage.viewMode = this.viewMode;
 
       var self = this;
       setTimeout(function(){
