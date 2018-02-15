@@ -72,9 +72,9 @@ var burnDown = Vue.component('burn-down',{
     if (self.id == null){
       var text = [
         "5",
-        "1562/1562",
-        "1282/1562",
-        "1100/1562",
+        "590/590",
+        "510/590",
+        "420/590",
       ].join("\n");
       self.editor.setValue(text, -1)
     }else{
