@@ -234,6 +234,13 @@ textarea {
   z-index:20
 }
 
+.done-text {
+  position:absolute;
+  background:rgba(120,120,120,0.5);
+  z-index:20
+}
+
+
 .axis path,
 .axis line {
 	fill: none;

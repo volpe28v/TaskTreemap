@@ -64,9 +64,10 @@ var taskTreemap = Vue.component('task-treemap',{
     getStatusColor: function(status){
       var todo_color = "#6aa43e";
       if (status == null){ return todo_color; }
-      if (status.match(/Done/i)){ return "#666666"; }
+      if (status.match(/Done/i)){ return "#888888"; }
       if (status.match(/Doing/i)){ return "#149bdf"; }
       if (status.match(/Waiting/i)){ return "#945F4F"; }
+      if (status.match(/Closed/i)){ return "#444444"; }
       return todo_color; //Todo or other
     },
 
@@ -81,6 +82,7 @@ var taskTreemap = Vue.component('task-treemap',{
       if (status == null){ return "Doing"; }
       if (status.match(/Done/i)){ return "Todo"; }
       if (status.match(/Doing/i)){ return "Done"; }
+      if (status.match(/Closed/i)){ return "Closed"; }
       return "Doing";
     },
 
@@ -109,7 +111,7 @@ var taskTreemap = Vue.component('task-treemap',{
           assignee_hash[assignee].children.push(child);
         }
 
-        var status = child.status;
+        var status = child.status.toLowerCase();
         if (status_hash[status] == null){
           status_hash[status] = { id: ++status_id, children: [child]};
         }else{

@@ -26,11 +26,14 @@
                          v-on:update-progress="updateProgress"
                          >
           </task-textarea>
-            <burn-down class="burn-down"
-                                         :id="id"
-                                         :progress="progress"
-                                         :socket="socket">
-            </burn-down>
+          <burn-down class="burn-down"
+                       :id="id"
+                       :tasks="tasks"
+                       :progress="progress"
+                       :socket="socket"
+                       v-on:update-tasks="updateTextTasks"
+                       >
+          </burn-down>
         </div>
       </div>
       <div class="wrapper" v-if="viewMode == 2">

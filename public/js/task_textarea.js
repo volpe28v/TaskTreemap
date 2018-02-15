@@ -149,8 +149,8 @@ var taskTextarea = Vue.component('task-textarea',{
       var self = this;
 
       var doing = children.filter(function(child){ return child.status != null && child.status.match(/Doing/i); });
-      var done = children.filter(function(child){ return child.status != null && child.status.match(/Done/i); });
-      var todo = children.filter(function(child){ return child.status == null || !child.status.match(/Done/i); });
+      var done = children.filter(function(child){ return child.status != null && child.status.match(/(Done|Closed)/i); });
+      var todo = children.filter(function(child){ return child.status == null || !child.status.match(/(Done|Closed)/i); });
 
       self.count = children.length;
       self.todo_count = todo.length;
@@ -218,7 +218,9 @@ var taskTextarea = Vue.component('task-textarea',{
         self.markerIds.push(self.editor.session.addMarker(new Range(i, 0, i, 100), "doing-text", "fullLine"));
       }else if (child.status != null && child.status.match(/Waiting/i)){
         self.markerIds.push(self.editor.session.addMarker(new Range(i, 0, i, 100), "waiting-text", "fullLine"));
-      }else if (child.status == null || !child.status.match(/Done/i)){
+      }else if (child.status != null && child.status.match(/Done/i)){
+        self.markerIds.push(self.editor.session.addMarker(new Range(i, 0, i, 100), "done-text", "fullLine"));
+      }else if (child.status == null || !child.status.match(/(Done|Closed)/i)){
         self.markerIds.push(self.editor.session.addMarker(new Range(i, 0, i, 100), "todo-text", "fullLine"));
       }
     },

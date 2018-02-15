@@ -9,7 +9,7 @@ var burnDown = Vue.component('burn-down',{
     <div id="burndown"></div>\
   </div>',
 
-  props: ['id','progress','socket'],
+  props: ['id','tasks', 'progress','socket'],
 
   data: function(){
     return {
@@ -334,6 +334,23 @@ var burnDown = Vue.component('burn-down',{
       var textArray = self.editor.getValue().trim().split("\n");
       textArray.push(self.progress.remaining + "/" + self.progress.total);
       self.editor.setValue(textArray.join("\n"), -1)
+
+      // Done を Closed へ
+      var tasks = {
+        "children": null
+      }
+
+      this.tasks.children.forEach(function(child){
+        if (child.status.match(/Done/i)){
+          child.status = "Closed";
+        }
+      });
+
+      tasks.children = this.tasks.children;
+      self.$emit('update-tasks',
+        {
+          tasks: tasks
+        });
     },
 
     isFinished: function(){

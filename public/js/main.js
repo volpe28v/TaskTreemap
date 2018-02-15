@@ -33,7 +33,7 @@ new Vue({
 
   mounted: function(){
     var self = this;
-    self.viewMode = localStorage.viewMode ? localStorage.viewMode : 1;
+    self.viewMode = (Number)(localStorage.viewMode ? localStorage.viewMode : 1);
   },
 
   methods: {
@@ -69,13 +69,7 @@ new Vue({
     },
 
     changeView: function(){
-      if (this.viewMode == 1){
-        this.viewMode = 2;
-      }else if (this.viewMode == 2){
-        this.viewMode = 3;
-      }else{
-        this.viewMode = 1;
-      }
+      this.viewMode = this.viewMode < 3 ? (this.viewMode + 1) : 1;
 
       localStorage.viewMode = this.viewMode;
 
