@@ -14,6 +14,7 @@ https://tasktreemap.herokuapp.com/?id=demo
 * タスクをダブルクリックすると状態遷移する。(Todo → Doing → Done → Todo)
 * タスクをロングクリックすると Waiting へ遷移する
 * 上部のアサイン名をタスクにドラッグするとアサイン可能
+* バーンダウンの「Apply to n sprints」をクリックすると Done → Closed に状態遷移する。
 
 * Alt + Click でレイアウト切り替え(3種類)
 * [Status] <-> [assignee] ボタンでタスクのグルーピング表示切り替え
