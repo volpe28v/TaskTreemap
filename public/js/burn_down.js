@@ -18,6 +18,7 @@ var burnDown = Vue.component('burn-down',{
       idealData: [],
       actualData: [],
       latestData: [],
+      assignedData: [],
       addedData: [],
       doneData: [],
       maxSum: 0,
@@ -39,10 +40,17 @@ var burnDown = Vue.component('burn-down',{
         self.editor.setValue("" + self.DefaultSprintNum, -1)
       }else{
         var text = self.editor.getValue();
-        self.parseText(text.split("\n"));
+        self.parseText(text);
         self.update();
       }
     },
+
+    tasks: function(){
+      var self = this;
+      var text = self.editor.getValue();
+      self.parseText(text);
+      self.update();
+    }
   },
 
   mounted: function(){
@@ -56,7 +64,7 @@ var burnDown = Vue.component('burn-down',{
     self.editor.session.setOptions({ tabSize: 2, useSoftTabs: false});
     self.editor.on('change', function(){
       var text = self.editor.getValue();
-      self.parseText(text.split(/\r\n|\r|\n/));
+      self.parseText(text);
       self.update();
 
       clearTimeout(self.saveTimer);
@@ -116,13 +124,14 @@ var burnDown = Vue.component('burn-down',{
       var sprintReg = /(\d+)/;
       var valueReg = /([\d\.]+)\/([\d\.]+)/;
 
+      var rows = text.split(/\r\n|\r|\n/);
       self.maxSum = 0;
       self.idealData = [];
       self.actualData = [];
       self.addedData = [];
       self.doneData = [];
 
-      var sprintMatched = text[0].match(sprintReg);
+      var sprintMatched = rows[0].match(sprintReg);
       self.sprintNum = 0;
       if (sprintMatched != null){
         self.sprintNum = parseInt(sprintMatched[1]);
@@ -133,8 +142,8 @@ var burnDown = Vue.component('burn-down',{
       var lastSum = 0;
       var actuals = [];
       var sums = [];
-      for (var i = 1; i < text.length; i++){
-        var matched = text[i].match(valueReg);
+      for (var i = 1; i < rows.length; i++){
+        var matched = rows[i].match(valueReg);
         if (matched == null){ continue; }
         actuals.push(Number(matched[1]));
         lastSum = Number(matched[2]);
@@ -199,7 +208,32 @@ var burnDown = Vue.component('burn-down',{
             sprint: curretSprint,
             value: actuals[lastActual.sprint] + (self.progress.total - sums[lastActual.sprint]) - self.progress.remaining,
           });
+        }
+      }
 
+      self.assignedData = [];
+      if (self.tasks != null && self.tasks.children.length > 0 && self.actualData.length > 0){
+        var lastActual = self.actualData[self.actualData.length-1];
+        if (lastActual.sprint < self.sprintNum){
+          var curretSprint = lastActual.sprint + 1;
+
+          var assignedSize = 0;
+          self.tasks.children.forEach(function(child){
+            if (!child.status.match(/(Done|Close)/i) && child.assignee != ""){
+              assignedSize += child.size;
+            }
+          });
+
+          self.assignedData = [
+            {
+              sprint: lastActual.sprint,
+              value: lastActual.value,
+            },
+            {
+              sprint: curretSprint,
+              value: self.progress.remaining - assignedSize,
+            }
+          ];
         }
       }
     },
@@ -299,6 +333,11 @@ var burnDown = Vue.component('burn-down',{
         .attr("d", line);
 
       svg.append("path")
+        .datum(self.assignedData)
+        .attr("class", "assigned-line")
+        .attr("d", line);
+
+      svg.append("path")
         .datum(self.latestData)
         .attr("class", "latest-line")
         .attr("d", line);
@@ -340,13 +379,13 @@ var burnDown = Vue.component('burn-down',{
         "children": null
       }
 
-      this.tasks.children.forEach(function(child){
+      self.tasks.children.forEach(function(child){
         if (child.status.match(/Done/i)){
           child.status = "Closed";
         }
       });
 
-      tasks.children = this.tasks.children;
+      tasks.children = self.tasks.children;
       self.$emit('update-tasks',
         {
           tasks: tasks

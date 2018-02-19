@@ -266,6 +266,13 @@ textarea {
 	stroke-width: 4.0px;
 }
 
+.assigned-line {
+	fill: none;
+	stroke: rgba(50, 185, 253, 0.8);
+	stroke-width: 3.0px;
+  stroke-dasharray: 2, 2;
+}
+
 .latest-line {
 	fill: none;
 	stroke: rgba(50, 185, 253, 0.8);

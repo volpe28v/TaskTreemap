@@ -9,12 +9,12 @@
   </head>
   <body>
     <div id="app" @click.alt="changeView">
-      <div class="wrapper" v-if="viewMode== 1">
+      <div class="wrapper" v-if="viewMode == 1">
         <task-treemap class="treemap-area"
-                                       :tasks="tasks"
-                                       :trigger="updateTrigger"
-                                       v-on:update-tasks="updateTextTasks"
-                                       v-on:select-task="selectTask">
+                      :tasks="tasks"
+                      :trigger="updateTrigger"
+                      v-on:update-tasks="updateTextTasks"
+                      v-on:select-task="selectTask">
         </task-treemap>
         <div class="rightpane">
           <task-textarea class="text-area"
@@ -38,9 +38,12 @@
       </div>
       <div class="wrapper" v-if="viewMode == 2">
         <burn-down class="burn-down-large"
-                                           :id="id"
-                                           :progress="progress"
-                                           :socket="socket">
+                   :id="id"
+                   :tasks="tasks"
+                   :progress="progress"
+                   :socket="socket"
+                   v-on:update-tasks="updateTextTasks"
+                   >
         </burn-down>
 
         <div class="rightpane">
@@ -53,12 +56,12 @@
                          v-on:update-progress="updateProgress"
                          >
           </task-textarea>
-            <task-treemap class="treemap-area"
-                                           :tasks="tasks"
-                                           :trigger="updateTrigger"
-                                           v-on:update-tasks="updateTextTasks"
-                                           v-on:select-task="selectTask">
-            </task-treemap>
+          <task-treemap class="treemap-area"
+                        :tasks="tasks"
+                        :trigger="updateTrigger"
+                        v-on:update-tasks="updateTextTasks"
+                        v-on:select-task="selectTask">
+          </task-treemap>
         </div>
       </div>
       <div class="wrapper" v-if="viewMode == 3">
@@ -81,8 +84,11 @@
           </task-treemap>
           <burn-down class="burn-down"
                      :id="id"
+                     :tasks="tasks"
                      :progress="progress"
-                     :socket="socket">
+                     :socket="socket"
+                     v-on:update-tasks="updateTextTasks"
+                     >
           </burn-down>
         </div>
       </div>
