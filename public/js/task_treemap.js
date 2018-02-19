@@ -265,7 +265,7 @@ var taskTreemap = Vue.component('task-treemap',{
             "name": key,
             "children": target_hash[key].children
             .filter(function(child){
-              if (!self.showDone && child.status.match(/Done/i)){
+              if (!self.showDone && child.status.match(/(Done|Closed)/i)){
                 return false;
               }else if (self.selectedUser != null && self.selectedUser.name != child.assignee) {
                 return false;
