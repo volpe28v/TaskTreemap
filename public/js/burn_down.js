@@ -72,19 +72,22 @@ var burnDown = Vue.component('burn-down',{
         var text = self.editor.getValue();
         if (text != self.preText){
           self.preText = text;
-          self.socket.emit('save_burn', {id: self.id, text: text});
+          self.saveText();
         }
       }, 500);
     });
 
     if (self.id == null){
-      var text = [
-        "5",
-        "590/590",
-        "510/590",
-        "420/590",
-      ].join("\n");
-      self.editor.setValue(text, -1)
+      self.text = self.getTextFromLocalstorage();
+      if (self.text == ""){
+        self.text = [
+          "5",
+          "590/590",
+          "510/590",
+          "420/590",
+        ].join("\n");
+      }
+      self.editor.setValue(self.text, -1)
     }else{
       // id に紐づくデータをサーバから取得する
       self.socket.on("burn_" + self.id, function(data){
@@ -103,6 +106,16 @@ var burnDown = Vue.component('burn-down',{
   },
 
   methods: {
+    saveText: function(){
+      var self = this;
+
+      if (self.id == null){
+        self.setTextToLocalStorage(self.preText);
+      }else{
+        self.socket.emit('save_burn', {id: self.id, text: self.preText});
+      }
+    },
+
     addResizeHandler: function(){
       var self = this;
       var resizeTimer;
@@ -400,7 +413,26 @@ var burnDown = Vue.component('burn-down',{
       }else{
         return false;
       }
-    }
+    },
+
+    getTextFromLocalstorage: function(){
+      try{
+        if (localStorage && localStorage.burndown){
+          return localStorage.burndown;
+        }
+        return "";
+      }catch (err){
+        return "";
+      }
+    },
+    setTextToLocalStorage: function(text){
+      try{
+        if (this.id == null && localStorage){
+          localStorage.burndown = text;
+        }
+      }catch (err){
+      }
+    },
 	}
 });
 

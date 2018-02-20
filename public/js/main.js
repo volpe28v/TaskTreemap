@@ -24,7 +24,6 @@ new Vue({
       taskLine: 0,
       progress: null,
       id: this.$route.query.id,
-      initialText: "",
       socket: socket,
       viewMode: 1,
       updateTrigger: false,
