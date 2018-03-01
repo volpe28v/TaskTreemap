@@ -8,7 +8,7 @@ var taskTextarea = Vue.component('task-textarea',{
     <div class="editor-footer">Delimiter [{{sepaMode.mode}}]</div>\
   </div>',
 
-  props: ['tasks','line','id','socket'],
+  props: ['tasks','line','id','socket','trigger'],
 
   data: function(){
     return {
@@ -40,6 +40,9 @@ var taskTextarea = Vue.component('task-textarea',{
     line: function(){
       this.editor.gotoLine(this.line, this.beforeCursor.column);
       this.editor.focus();
+    },
+    trigger: function(){
+      this.editor.resize();
     },
   },
 

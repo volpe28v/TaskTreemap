@@ -21,7 +21,7 @@ var taskTreemap = Vue.component('task-treemap',{
       showDone: true,
       selectedUser: null,
       longClickTimer: null,
-      groupMode: 'assignee'
+      groupMode: null,
     }
   },
 
@@ -43,8 +43,8 @@ var taskTreemap = Vue.component('task-treemap',{
   },
 
   mounted: function(){
-    this.addResizeHandler();
     this.loadFromLocalStorage();
+    this.addResizeHandler();
   },
 
   methods: {

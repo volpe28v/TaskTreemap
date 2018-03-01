@@ -22,6 +22,7 @@
                          :tasks="textTasks"
                          :line="taskLine"
                          :socket="socket"
+                         :trigger="updateTrigger"
                          v-on:update-tasks="updateTasks"
                          v-on:update-progress="updateProgress"
                          >
@@ -52,6 +53,7 @@
                          :tasks="textTasks"
                          :line="taskLine"
                          :socket="socket"
+                         :trigger="updateTrigger"
                          v-on:update-tasks="updateTasks"
                          v-on:update-progress="updateProgress"
                          >
@@ -70,6 +72,7 @@
                        :tasks="textTasks"
                        :line="taskLine"
                        :socket="socket"
+                       :trigger="updateTrigger"
                        v-on:update-tasks="updateTasks"
                        v-on:update-progress="updateProgress"
                        >
