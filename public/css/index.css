@@ -26,6 +26,7 @@ html,body {
   display: flex;
   flex-direction: column;
   margin-top: 3px;
+  background: #161616;
 }
 
 #burndown_apply {
@@ -38,11 +39,17 @@ html,body {
 #burndown_apply a {
   color: gray;
   text-decoration: none;
+  margin-left: 3px;
+}
+
+#burndown_apply a:hover {
+  color: yellow;
 }
 
 #burndown_editor {
   flex: 1;
   position: relative;
+  margin-left: 10px;
 }
 
 #app {

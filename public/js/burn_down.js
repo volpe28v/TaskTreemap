@@ -62,6 +62,10 @@ var burnDown = Vue.component('burn-down',{
     self.editor.getSession().setUseWrapMode(true);
     self.editor.$blockScrolling = Infinity;
     self.editor.session.setOptions({ tabSize: 2, useSoftTabs: false});
+    self.editor.setOptions({
+      showLineNumbers: false,
+      showGutter: false,
+    });
     self.editor.on('change', function(){
       var text = self.editor.getValue();
       self.parseText(text);

@@ -8,7 +8,7 @@ var taskTextarea = Vue.component('task-textarea',{
     <div class="editor-footer">Delimiter [{{sepaMode.mode}}]</div>\
   </div>',
 
-  props: ['tasks','line','id','socket','trigger'],
+  props: ['tasks','line','id','socket','trigger','font_size'],
 
   data: function(){
     return {
@@ -84,11 +84,18 @@ var taskTextarea = Vue.component('task-textarea',{
 
     // ade editor setting
     self.editor = ace.edit("editor");
-    self.editor.setOption("showPrintMargin", false);
+    self.editor.setOptions({
+      showPrintMargin: false,
+    });
+    self.editor.setFontSize(self.font_size);
     self.editor.setTheme("ace/theme/chaos");
     self.editor.getSession().setUseWrapMode(true);
     self.editor.$blockScrolling = Infinity;
-    self.editor.session.setOptions({ tabSize: 2, useSoftTabs: false});
+    self.editor.session.setOptions({
+      tabSize: 2,
+      useSoftTabs: false
+    });
+
     self.editor.on('change', function(){
       self.text = self.editor.getValue();
       self.updateText();
