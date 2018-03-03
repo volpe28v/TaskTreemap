@@ -1,7 +1,7 @@
 var taskTreemap = Vue.component('task-treemap',{
   template: '<div>\
     <div class="task-info">\
-      <input type="checkbox" id="done_check" v-model="showDone"><label style="font-size: 10px" for="done_check">Done</label>\
+      <input type="checkbox" id="closed_check" v-model="showClosed"><label style="font-size: 10px" for="closed_check">Closed</label>\
       <button v-show="groupMode==\'status\'" v-on:click="groupMode=\'assignee\'">Assignee</button>\
       <button v-show="groupMode==\'assignee\'" v-on:click="groupMode=\'status\'">Status</button>\
       <span class="user-info" v-for="user in users" draggable="true" @dragstart="dragstart(user, $event)" @dragend="dragend">\
@@ -18,7 +18,7 @@ var taskTreemap = Vue.component('task-treemap',{
       ColorMax: 9,
       users: [],
       draggingItem: null,
-      showDone: true,
+      showClosed: true,
       selectedUser: null,
       longClickTimer: null,
       groupMode: null,
@@ -29,9 +29,9 @@ var taskTreemap = Vue.component('task-treemap',{
     tasks: function(){
       this.setTasks();
     },
-    showDone: function(){
+    showClosed: function(){
       this.update();
-      localStorage.showDone = this.showDone;
+      localStorage.showClosed = this.showClosed;
     },
     groupMode: function(){
       this.update();
@@ -271,7 +271,7 @@ var taskTreemap = Vue.component('task-treemap',{
             "name": key,
             "children": target_hash[key].children
             .filter(function(child){
-              if (!self.showDone && child.status.match(/(Done|Closed)/i)){
+              if (!self.showClosed && child.status.match(/(Closed)/i)){
                 return false;
               }else if (self.selectedUser != null && self.selectedUser.name != child.assignee) {
                 return false;
@@ -322,7 +322,7 @@ var taskTreemap = Vue.component('task-treemap',{
     loadFromLocalStorage: function(){
       var self = this;
 
-      self.showDone = localStorage.showDone ? localStorage.showDone == 'true' : true;
+      self.showClosed = localStorage.showClosed ? localStorage.showClosed == 'true' : true;
       self.groupMode = localStorage.groupMode ? localStorage.groupMode : 'assignee';
     },
   }
