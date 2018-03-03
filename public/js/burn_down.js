@@ -187,11 +187,11 @@ var burnDown = Vue.component('burn-down',{
           if (i >= 1){
             self.addedData.push({
               sprint: i,
-              value: sums[i] - sums[i-1],
+              value: Math.max(sums[i] - sums[i-1], 0),
             });
             self.doneData.push({
               sprint: i,
-              value: actuals[i-1] + (sums[i] - sums[i-1]) - actuals[i],
+              value: Math.max(actuals[i-1] + (sums[i] - sums[i-1]) - actuals[i], 0),
             });
           }
         }
@@ -215,11 +215,11 @@ var burnDown = Vue.component('burn-down',{
 
           self.addedData.push({
             sprint: curretSprint,
-            value: self.progress.total - sums[lastActual.sprint],
+            value: Math.max(self.progress.total - sums[lastActual.sprint], 0),
           });
           self.doneData.push({
             sprint: curretSprint,
-            value: actuals[lastActual.sprint] + (self.progress.total - sums[lastActual.sprint]) - self.progress.remaining,
+            value: Math.max(actuals[lastActual.sprint] + (self.progress.total - sums[lastActual.sprint]) - self.progress.remaining, 0),
           });
         }
       }

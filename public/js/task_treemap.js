@@ -43,8 +43,14 @@ var taskTreemap = Vue.component('task-treemap',{
   },
 
   mounted: function(){
-    this.loadFromLocalStorage();
-    this.addResizeHandler();
+    var self = this;
+    self.loadFromLocalStorage();
+    self.addResizeHandler();
+
+    // 初回のサイズずれを微調整
+    setTimeout(function () {
+      self.update();
+    }, 1);
   },
 
   methods: {
