@@ -1,7 +1,7 @@
 // vue vm
 var taskTreemap  = require("./task_treemap");
 var taskTextarea = require("./task_textarea");
-var burnDown     = require("./burn_down");
+var burnDown     = require("./burn_down.vue").default;
 
 var socket = require('socket.io-client')('/', {});
 
@@ -17,6 +17,9 @@ var router = new VueRouter({
 new Vue({
   router: router,
   el: '#app',
+  components: {
+    'burn-down': burnDown 
+  },
   data: function(){
     return {
       tasks: null,
