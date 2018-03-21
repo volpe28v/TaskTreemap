@@ -1,6 +1,6 @@
 // vue vm
-var taskTreemap  = require("./task_treemap");
-var taskTextarea = require("./task_textarea");
+var taskTreemap  = require("./task_treemap.vue").default;
+var taskTextarea = require("./task_textarea.vue").default;
 var burnDown     = require("./burn_down.vue").default;
 
 var socket = require('socket.io-client')('/', {});
@@ -18,6 +18,8 @@ new Vue({
   router: router,
   el: '#app',
   components: {
+    'task-treemap': taskTreemap, 
+    'task-textarea': taskTextarea, 
     'burn-down': burnDown 
   },
   data: function(){

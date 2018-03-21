@@ -1,16 +1,19 @@
-var taskTreemap = Vue.component('task-treemap',{
-  template: '<div>\
-    <div class="task-info">\
-      <input type="checkbox" id="closed_check" v-model="showClosed"><label style="font-size: 10px" for="closed_check">Closed</label>\
-      <button v-show="groupMode==\'status\'" v-on:click="groupMode=\'assignee\'">Assignee</button>\
-      <button v-show="groupMode==\'assignee\'" v-on:click="groupMode=\'status\'">Status</button>\
-      <span class="user-info" v-for="user in users" draggable="true" @dragstart="dragstart(user, $event)" @dragend="dragend">\
-        <span v-bind:class="user.class" v-on:click="selectUser(user)">{{user.name}} {{user.todo_sizes}}/{{user.sizes}}</span>\
-      </span>\
-    </div>\
-    <div id="treemap"></div>\
-  </div>',
+<template>
+  <div>
+    <div class="task-info">
+      <input type="checkbox" id="closed_check" v-model="showClosed"><label style="font-size: 10px" for="closed_check">Closed</label>
+      <button v-show="groupMode=='status'" v-on:click="groupMode='assignee'">Assignee</button>
+      <button v-show="groupMode=='assignee'" v-on:click="groupMode='status'">Status</button>
+      <span class="user-info" v-for="user in users" draggable="true" @dragstart="dragstart(user, $event)" @dragend="dragend">
+        <span v-bind:class="user.class" v-on:click="selectUser(user)">{{user.name}} {{user.todo_sizes}}/{{user.sizes}}</span>
+      </span>
+    </div>
+    <div id="treemap"></div>
+  </div>
+</template>
 
+<script>
+module.exports = {
   props: ['tasks', 'trigger'],
 
   data: function(){
@@ -326,6 +329,8 @@ var taskTreemap = Vue.component('task-treemap',{
       self.groupMode = localStorage.groupMode ? localStorage.groupMode : 'assignee';
     },
   }
-});
+}
+</script>
 
-module.exports = taskTreemap;
+<style>
+</style>
