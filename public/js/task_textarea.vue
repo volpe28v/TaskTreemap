@@ -1,10 +1,40 @@
 <template>
   <div>
-    <div class="task-info">残り {{todo_count}}/{{ count }} タスク. {{todo_sizes}}/{{ sizes }} 規模.</div>
+    <div class="text-info">残り {{todo_count}}/{{ count }} タスク. {{todo_sizes}}/{{ sizes }} 規模.</div>
     <div id="editor"></div>
     <div class="editor-footer">Delimiter [{{sepaMode.mode}}]</div>
   </div>
 </template>
+
+<style scoped>
+.text-info {
+  color: white;
+  padding: 2px 5px;
+}
+
+.editor-footer {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 12px;
+  color: gray;
+  background: #161616;
+  padding-right: 5px;
+}
+
+textarea {
+  font-family: Osaka-mono, "Osaka-等幅", "ＭＳ ゴシック", monospace;
+  font-size: 14px;
+  flex: 1;
+  padding: 8px;
+  background: #333;
+  color: white;
+}
+
+#editor{
+  flex: 1;
+}
+
+</style>
 
 <script>
 var axios = require("axios");
@@ -298,6 +328,3 @@ module.exports = {
   }
 }
 </script>
-
-<style>
-</style>

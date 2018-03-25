@@ -12,6 +12,135 @@
   </div>
 </template>
 
+<style>
+#treemap {
+  flex: 1;
+  position: relative;
+}
+
+.task-elem {
+  position: absolute;
+  overflow: hidden;
+  padding: 0px;
+  border-redius: 6px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.task-name {
+  margin-top: 2px;
+  margin-left: 8px;
+  margin-right: 5px;
+  font-size: 12px;
+  color: white;
+}
+
+.task-size {
+  margin-left: 12px;
+  font-size: 10px;
+  color: #ddd;
+}
+
+.assignee-list-elem {
+  cursor: pointer;
+}
+
+.assignee-div {
+  margin-top: 3px;
+  margin-left: 5px;
+  float: right;
+}
+
+.task-assignee {
+  font-weight: bold;
+  font-size: 12px;
+  margin-right: 5px;
+  padding: 4px 5px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  color: white;
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.assignee-0{
+  background-color: gray;
+}
+
+.assignee-1{
+  background-color: #2e8b57;
+}
+
+.assignee-2{
+  background-color: #26499d;
+}
+
+.assignee-3{
+  background-color: #a52a2a;
+}
+
+.assignee-4{
+  background-color: #bc763c;
+}
+
+.assignee-5{
+  background-color: #aa4f37;
+}
+
+.assignee-6{
+  background-color: #c89932;
+}
+
+.assignee-7{
+  background-color: #69821b;
+}
+
+.assignee-8{
+  background-color: #522886;
+}
+
+.assignee-9{
+  background-color: #866629;
+}
+
+.task-info {
+  color: white;
+  padding: 2px 5px;
+}
+
+.todo-text {
+  position:absolute;
+  background:rgba(106,164,62,0.5);
+  z-index:20
+}
+
+.doing-text {
+  position:absolute;
+  background:rgba(20,155,223,0.5);
+  z-index:20
+}
+
+.waiting-text {
+  position:absolute;
+  background:rgba(148,95,79,0.5);
+  z-index:20
+}
+
+.done-text {
+  position:absolute;
+  background:rgba(120,120,120,0.5);
+  z-index:20
+}
+
+
+</style>
+
 <script>
 module.exports = {
   props: ['tasks', 'trigger'],
@@ -331,6 +460,3 @@ module.exports = {
   }
 }
 </script>
-
-<style>
-</style>

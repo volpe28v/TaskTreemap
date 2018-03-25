@@ -10,6 +10,95 @@
   </div>
 </template>
 
+<style>
+#burndown {
+  flex: 2;
+  position: relative;
+  background: #161616;
+  margin-top: 3px;
+}
+
+#burndown_left {
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 3px;
+  background: #161616;
+}
+
+#burndown_apply {
+  background: #161616;
+  padding: 2px 5px;
+  font-size: 12px;
+  height: 20px;
+}
+
+#burndown_apply a {
+  color: gray;
+  text-decoration: none;
+  margin-left: 3px;
+}
+
+#burndown_apply a:hover {
+  color: yellow;
+}
+
+#burndown_editor {
+  flex: 1;
+  position: relative;
+  margin-left: 10px;
+}
+
+.axis path,
+.axis line {
+	fill: none;
+	stroke: #ccc;
+	shape-rendering: crispEdges;
+	stroke-width: 1.5px;
+}
+
+.axis text {
+  fill: #ccc;
+  font-size: 11px;
+}
+
+.line {
+	fill: none;
+  stroke: #ccc;
+	stroke-width: 1.5px;
+}
+
+.actual-line {
+	fill: none;
+	stroke: rgba(136, 194, 92, 0.8);
+	stroke-width: 4.0px;
+}
+
+.assigned-line {
+	fill: none;
+	stroke: rgba(50, 185, 253, 0.8);
+	stroke-width: 3.0px;
+  stroke-dasharray: 2, 2;
+}
+
+.latest-line {
+	fill: none;
+	stroke: rgba(50, 185, 253, 0.8);
+	stroke-width: 4.0px;
+}
+
+
+.bar {
+  fill: rgba(148, 95, 79, 1.0)
+}
+
+.done-bar{
+  fill: rgba(102,102,102,0.8);
+}
+
+
+</style>
+
 <script>
   module.exports = {
     props: ['id','tasks', 'progress','socket'],
@@ -443,6 +532,3 @@
     }
   };
 </script>
-
-<style>
-</style>
