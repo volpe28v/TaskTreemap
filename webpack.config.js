@@ -4,7 +4,8 @@ module.exports = {
   context: __dirname + '/public/js',
 
   entry: {
-    "main": "./main.js"
+    "main": "./main.js",
+    "list": "./list.js"
   },
 
   output: {
