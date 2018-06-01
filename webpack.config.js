@@ -4,12 +4,12 @@ module.exports = {
   context: __dirname + '/public/js',
 
   entry: {
-    js: "./main.js"
+    "main": "./main.js"
   },
 
   output: {
     path: __dirname + '/public/dist',
-    filename: "./bundle.js"
+    filename: "./[name]_bundle.js"
   },
 
   module: {

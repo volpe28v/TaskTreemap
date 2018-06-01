@@ -36,6 +36,11 @@ Promise.all([
 });
 
 function startServer(){
+  app.get('/list', function (req, res) {
+    var options = { root: path.join(__dirname, 'public') };
+    res.sendFile('list.html', options);
+  });
+
   server.listen(app.get('port'), function () {
     console.log('TaskTreeMap listening on port ' + app.get('port'));
   });
