@@ -37,7 +37,6 @@ textarea {
 </style>
 
 <script>
-var axios = require("axios");
 var Range = ace.require('ace/range').Range;
 
 module.exports = {

@@ -41,6 +41,14 @@ function startServer(){
     res.sendFile('list.html', options);
   });
 
+  app.get('/all_maps', function (req, res) {
+    tasktreemap_db.findAll()
+    .then(function(result){
+      res.send(result);
+    });
+  });
+
+
   server.listen(app.get('port'), function () {
     console.log('TaskTreeMap listening on port ' + app.get('port'));
   });

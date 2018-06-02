@@ -9,6 +9,7 @@
 </style>
 
 <script>
+var axios = require("axios");
 
 module.exports = {
 
@@ -21,11 +22,10 @@ module.exports = {
   mounted: function(){
     var self = this;
 
-    // dummy data
-    self.taskMapList = [
-      { id: "hoge" },
-      { id: "fuga" },
-    ];
+    axios.get('all_maps')
+      .then(function(result){
+        self.taskMapList = result.data;
+      });
   }
 }
 </script>
