@@ -1,24 +1,24 @@
 <template>
   <div>
-    <div id="burndown_left">
-      <div id="burndown_apply">
+    <div class="burndown_left">
+      <div class="burndown_apply">
         <a class="apply-progress" href="#" v-on:click="applyProgress">{{applyText}}</a>
       </div>
-      <div id="burndown_editor"></div>
+      <div class="burndown_editor" :id="burndownEditorId"></div>
     </div>
-    <div id="burndown"></div>
+    <div class="burndown" :id="burndownId"></div>
   </div>
 </template>
 
 <style>
-#burndown {
+.burndown {
   flex: 2;
   position: relative;
   background: #161616;
   margin-top: 3px;
 }
 
-#burndown_left {
+.burndown_left {
   width: 150px;
   display: flex;
   flex-direction: column;
@@ -26,24 +26,24 @@
   background: #161616;
 }
 
-#burndown_apply {
+.burndown_apply {
   background: #161616;
   padding: 2px 5px;
   font-size: 12px;
   height: 20px;
 }
 
-#burndown_apply a {
+.burndown_apply a {
   color: gray;
   text-decoration: none;
   margin-left: 3px;
 }
 
-#burndown_apply a:hover {
+.burndown_apply a:hover {
   color: yellow;
 }
 
-#burndown_editor {
+.burndown_editor {
   flex: 1;
   position: relative;
   margin-left: 10px;
@@ -87,7 +87,6 @@
 	stroke-width: 4.0px;
 }
 
-
 .bar {
   fill: rgba(148, 95, 79, 1.0)
 }
@@ -95,7 +94,6 @@
 .done-bar{
   fill: rgba(102,102,102,0.8);
 }
-
 
 </style>
 
@@ -120,6 +118,12 @@
     },
 
     computed: {
+      burndownId: function(){
+        return 'burndown_' + this.id;
+      },
+      burndownEditorId: function(){
+        return 'burndown_editor_' + this.id;
+      }
     },
 
     watch: {
@@ -149,7 +153,7 @@
       var self = this;
       self.addResizeHandler();
 
-      self.editor = ace.edit("burndown_editor");
+      self.editor = ace.edit(this.burndownEditorId);
       self.editor.setTheme("ace/theme/chaos");
       self.editor.getSession().setUseWrapMode(true);
       self.editor.$blockScrolling = Infinity;
@@ -353,10 +357,10 @@
         self.setApplyText();
 
         // 初期化
-        d3.select("#burndown").selectAll("svg").remove();
+        d3.select("#" + this.burndownId).selectAll("svg").remove();
 
-        var div_height = document.getElementById("burndown").clientHeight;
-        var div_width = document.getElementById("burndown").clientWidth;
+        var div_height = document.getElementById(this.burndownId).clientHeight;
+        var div_width = document.getElementById(this.burndownId).clientWidth;
 
         var margin = { top: 20, right: 20, bottom: 30, left: 50 },
           width = div_width - margin.left - margin.right,
@@ -389,7 +393,7 @@
 
 
         // svgの定義
-        var svg = d3.select("#burndown").append("svg")
+        var svg = d3.select("#" + this.burndownId).append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
           .append("g")

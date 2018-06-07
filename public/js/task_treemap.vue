@@ -1,19 +1,19 @@
 <template>
   <div>
     <div class="task-info">
-      <input type="checkbox" id="closed_check" v-model="showClosed"><label style="font-size: 10px" for="closed_check">Closed</label>
+      <input type="checkbox" :id="closedCheckId" v-model="showClosed"><label style="font-size: 10px" :for="closedCheckId">Closed</label>
       <button v-show="groupMode=='status'" v-on:click="groupMode='assignee'">Assignee</button>
       <button v-show="groupMode=='assignee'" v-on:click="groupMode='status'">Status</button>
       <span class="user-info" v-for="user in users" draggable="true" @dragstart="dragstart(user, $event)" @dragend="dragend">
         <span v-bind:class="user.class" v-on:click="selectUser(user)">{{user.name}} {{user.todo_sizes}}/{{user.sizes}}</span>
       </span>
     </div>
-    <div id="treemap"></div>
+    <div class="treemap" :id="treemapId"></div>
   </div>
 </template>
 
 <style>
-#treemap {
+.treemap {
   flex: 1;
   position: relative;
 }
@@ -138,12 +138,11 @@
   z-index:20
 }
 
-
 </style>
 
 <script>
 module.exports = {
-  props: ['tasks', 'trigger'],
+  props: ['id', 'tasks', 'trigger'],
 
   data: function(){
     return {
@@ -154,6 +153,15 @@ module.exports = {
       selectedUser: null,
       longClickTimer: null,
       groupMode: null,
+    }
+  },
+
+  computed: {
+    treemapId: function(){
+      return 'treemap_' + this.id;
+    },
+    closedCheckId: function(){
+      return 'close_check_' + this.id;
     }
   },
 
@@ -279,19 +287,19 @@ module.exports = {
       }
 
       // treemap 生成
-      var height = document.getElementById("treemap").clientHeight;
-      var width = document.getElementById("treemap").clientWidth;
+      var height = document.getElementById(this.treemapId).clientHeight;
+      var width = document.getElementById(this.treemapId).clientWidth;
 
       var treemap = d3.layout.treemap()
         .size([width, height])
         .value(function(d) { return d.size; });
 
       // 初期化
-      d3.select("#treemap").selectAll("div").remove();
+      d3.select("#" + this.treemapId).selectAll("div").remove();
       if (children.length == 0){ return; }
 
       // treemap 要素生成
-      var task_tree = d3.select("#treemap")
+      var task_tree = d3.select("#" + this.treemapId)
         .selectAll("div")
         .data(treemap.nodes(treemap_node));
 
@@ -360,7 +368,7 @@ module.exports = {
         .remove();
 
       // 更新処理
-      d3.select("#treemap").selectAll("div")
+      d3.select("#" + this.treemapId).selectAll("div")
         .attr("class", "task-elem")
         .attr("title", function(d) { return d.name + " (" + d.size + ")" + (d.assignee ? " [" + d.assignee + "]" : ""); })
         .style("left", function(d) { return d.x + "px"; })

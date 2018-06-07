@@ -2,6 +2,7 @@
   <div @click.alt="changeView">
     <div class="wrapper" v-if="viewMode == 1">
       <task-treemap class="treemap-area"
+                    :id="id"
                     :tasks="tasks"
                     :trigger="updateTrigger"
                     v-on:update-tasks="updateTextTasks"
@@ -52,6 +53,7 @@
                          >
           </task-textarea>
             <task-treemap class="treemap-area"
+                          :id="id"
                           :tasks="tasks"
                           :trigger="updateTrigger"
                           v-on:update-tasks="updateTextTasks"
@@ -74,6 +76,7 @@
 
         <div class="rightpane">
           <task-treemap class="treemap-area-right"
+                        :id="id"
                         :tasks="tasks"
                         :trigger="updateTrigger"
                         v-on:update-tasks="updateTextTasks"

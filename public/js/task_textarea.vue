@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="text-info">残り {{todo_count}}/{{ count }} タスク. {{todo_sizes}}/{{ sizes }} 規模.</div>
-    <div id="editor"></div>
+    <div class="editor" :id="editorId"></div>
     <div class="editor-footer">Delimiter [{{sepaMode.mode}}]</div>
   </div>
 </template>
@@ -30,7 +30,7 @@ textarea {
   color: white;
 }
 
-#editor{
+.editor{
   flex: 1;
 }
 
@@ -62,6 +62,12 @@ module.exports = {
 
       saveTimer: null,
       markerIds: [],
+    }
+  },
+
+  computed: {
+    editorId: function(){
+      return 'editor_' + this.id;
     }
   },
 
@@ -115,7 +121,7 @@ module.exports = {
     }
 
     // ade editor setting
-    self.editor = ace.edit("editor");
+    self.editor = ace.edit(this.editorId);
     self.editor.setOptions({
       showPrintMargin: false,
     });
