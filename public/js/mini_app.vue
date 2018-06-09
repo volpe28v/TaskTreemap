@@ -123,8 +123,6 @@ module.exports = {
     changeView: function(){
       this.viewMode = this.viewMode < 2 ? (this.viewMode + 1) : 1;
 
-      localStorage.viewMode = this.viewMode;
-
       var self = this;
       setTimeout(function(){
         self.updateTrigger = !self.updateTrigger;
