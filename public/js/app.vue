@@ -1,5 +1,5 @@
 <template>
-  <div @click.alt="changeView">
+  <div @click.alt="changeView" @click.shift="changeView">
     <div class="wrapper" v-if="viewMode == 1">
       <task-treemap class="treemap-area"
                     :id="id"
@@ -25,6 +25,7 @@
                      :tasks="tasks"
                      :progress="progress"
                      :socket="socket"
+                     :trigger="updateTrigger"
                      v-on:update-tasks="updateTextTasks"
                      >
           </burn-down>
@@ -36,6 +37,7 @@
                  :tasks="tasks"
                  :progress="progress"
                  :socket="socket"
+                 :trigger="updateTrigger"
                  v-on:update-tasks="updateTextTasks"
                  >
       </burn-down>
@@ -87,6 +89,7 @@
                      :tasks="tasks"
                      :progress="progress"
                      :socket="socket"
+                     :trigger="updateTrigger"
                      v-on:update-tasks="updateTextTasks"
                      >
           </burn-down>

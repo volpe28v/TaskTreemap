@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @click.alt="changeView" @click.shift="changeView">
     <div class="wrapper">
       <a :href="'/?id=' + map_id" class="map-id">{{map_id}}</a>
       <task-treemap class="treemap-area"
@@ -9,8 +9,19 @@
                     v-on:update-tasks="updateTextTasks"
                     v-on:select-task="selectTask">
       </task-treemap>
-      <div class="rightpane">
-        <task-textarea v-show="false" class="text-area"
+      <div class="rightpane" v-show="viewMode == 1">
+        <burn-down class="burn-down"
+                   :id="id"
+                   :tasks="tasks"
+                   :progress="progress"
+                   :socket="socket"
+                   :trigger="updateTrigger"
+                   v-on:update-tasks="updateTextTasks"
+                   >
+        </burn-down>
+      </div>
+      <div class="rightpane" v-show="viewMode == 2">
+        <task-textarea class="text-area"
                        :id="id"
                        :tasks="textTasks"
                        :line="taskLine"
@@ -21,14 +32,6 @@
                        v-on:update-progress="updateProgress"
                        >
         </task-textarea>
-        <burn-down class="burn-down"
-                   :id="id"
-                   :tasks="tasks"
-                   :progress="progress"
-                   :socket="socket"
-                   v-on:update-tasks="updateTextTasks"
-                   >
-        </burn-down>
       </div>
     </div>
   </div>
@@ -36,7 +39,7 @@
 
 <style>
 .wrapper {
-  margin: 5px;
+  margin: 5px 10px;
   width: 400px;
   height: 600px;
   flex-direction: column;
@@ -83,9 +86,6 @@ module.exports = {
   },
 
   mounted: function(){
-    var self = this;
-    self.viewMode = (Number)(localStorage.viewMode ? localStorage.viewMode : 1);
-    console.log(self.viewMode);
   },
 
   methods: {
@@ -119,6 +119,18 @@ module.exports = {
     updateProgress: function(params){
       this.progress = params.progress;
     },
+
+    changeView: function(){
+      this.viewMode = this.viewMode < 2 ? (this.viewMode + 1) : 1;
+
+      localStorage.viewMode = this.viewMode;
+
+      var self = this;
+      setTimeout(function(){
+        self.updateTrigger = !self.updateTrigger;
+      },1);
+    }
+
   }
 }
 </script>

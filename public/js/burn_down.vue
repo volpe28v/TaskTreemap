@@ -99,7 +99,7 @@
 
 <script>
   module.exports = {
-    props: ['id','tasks', 'progress','socket'],
+    props: ['id','tasks', 'progress','socket','trigger'],
 
     data: function(){
       return {
@@ -146,6 +146,10 @@
         var text = self.editor.getValue();
         self.parseText(text);
         self.update();
+      },
+
+      trigger: function(){
+        this.update();
       }
     },
 
