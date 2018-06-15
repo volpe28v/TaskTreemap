@@ -4,7 +4,7 @@
       <input type="checkbox" :id="closedCheckId" v-model="showClosed"><label style="font-size: 10px" :for="closedCheckId">Closed</label>
       <button v-show="groupMode=='status'" v-on:click="groupMode='assignee'">Assignee</button>
       <button v-show="groupMode=='assignee'" v-on:click="groupMode='status'">Status</button>
-      <span class="user-info" v-for="user in users" draggable="true" @dragstart="dragstart(user, $event)" @dragend="dragend">
+      <span v-show="!isSimple" class="user-info" v-for="user in users" draggable="true" @dragstart="dragstart(user, $event)" @dragend="dragend">
         <span v-bind:class="user.class" v-on:click="selectUser(user)">{{user.name}} {{user.todo_sizes}}/{{user.sizes}}</span>
       </span>
     </div>
@@ -142,7 +142,7 @@
 
 <script>
 module.exports = {
-  props: ['id', 'tasks', 'trigger'],
+  props: ['id', 'tasks', 'trigger', 'simple'],
 
   data: function(){
     return {
@@ -162,6 +162,9 @@ module.exports = {
     },
     closedCheckId: function(){
       return 'close_check_' + this.id;
+    },
+    isSimple: function(){
+      return this.simple == true;
     }
   },
 
@@ -394,7 +397,7 @@ module.exports = {
             return "";
           }else{
             return [
-              d.assignee ? '<div class="assignee-div"><span class="task-assignee assignee-' + self.getColorNo(assignee_hash[d.assignee].id) + '">' + d.assignee + '</span></div>' : "",
+              d.assignee && !self.isSimple ? '<div class="assignee-div"><span class="task-assignee assignee-' + self.getColorNo(assignee_hash[d.assignee].id) + '">' + d.assignee + '</span></div>' : "",
               '<div class="task-name">' + d.name + '</div>',
               '<div class="task-size">' + d.size + '</div>',
             ].join("");

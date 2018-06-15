@@ -6,6 +6,7 @@
                     :id="map_id"
                     :tasks="tasks"
                     :trigger="updateTrigger"
+                    :simple="true"
                     v-on:update-tasks="updateTextTasks"
                     v-on:select-task="selectTask">
       </task-treemap>
