@@ -141,6 +141,8 @@
 </style>
 
 <script>
+var LineSeparatorReg = new RegExp('^---+$')
+
 module.exports = {
   props: ['id', 'tasks', 'trigger', 'simple'],
 
@@ -170,7 +172,7 @@ module.exports = {
 
   watch: {
     tasks: function(){
-      this.setTasks();
+      this.update();
     },
     showClosed: function(){
       this.update();
@@ -197,12 +199,6 @@ module.exports = {
   },
 
   methods: {
-    setTasks: function(){
-      var self = this;
-
-      self.update();
-    },
-
     getColorNo: function(id){
       var self = this;
       if (id == 0) return 0;
@@ -226,7 +222,7 @@ module.exports = {
       return tasks.length == 1 ? tasks[0].size : tasks.map(function(task){ return task.size; })
        .reduce(function(prev, size){ return prev + size; });
     },
- 
+
     getNextStatus: function(status){
       if (status == null){ return "Doing"; }
       if (status.match(/Done/i)){ return "Todo"; }
@@ -252,6 +248,8 @@ module.exports = {
       var status_hash = { "": { id: 0, children: [] }};
       var status_id = 0;
       children.forEach(function(child){
+        if (child.name.match(LineSeparatorReg)) return;
+
         var assignee = child.assignee != null ? child.assignee : "";
 
         if (assignee_hash[assignee] == null){
@@ -312,7 +310,7 @@ module.exports = {
         .on("click",function(d){
           self.$emit('select-task',
             {
-              no: d.i 
+              no: d.i
             });
         })
         .on("dblclick",function(d){

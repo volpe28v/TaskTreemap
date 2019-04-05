@@ -38,6 +38,7 @@ textarea {
 
 <script>
 var Range = ace.require('ace/range').Range;
+var LineSeparatorReg = new RegExp('^---+$')
 
 module.exports = {
   props: ['tasks','line','id','socket','trigger','font_size'],
@@ -99,6 +100,7 @@ module.exports = {
           "アサイン名をタスクにドラッグできるよ 60 Todo",
           "タスクを選択すると対応するテキストにフォーカスするよ 70 Doing Aさん",
           "カーソル位置に対応するタスクが選択されるよ 80 Closed",
+          "---",
           "Excelからコピペできるよ 55 Todo Aさん",
           "区切りはタブとスペースに対応しているよ 45 Doing",
           "ステータスがDoneになると残り規模が減るよ 35 Done Cさん",
@@ -232,13 +234,26 @@ module.exports = {
         .map(function(row, i){
           var matched = row.match(self.sepaMode.reg);
           if (matched == null){ return null; }
-          var child = {
-            i: i+1,
-            cursor: i == cursor.row,
-            name: matched[1],
-            size: matched[3] ? Number(matched[3]) : 1,
-            status: matched[6] ? matched[6] : "Todo",
-            assignee: matched[8] ? matched[8] : "",
+
+          var child = null;
+          if (matched[1].match(LineSeparatorReg)){
+            child = {
+              i: i+1,
+              cursor: i == cursor.row,
+              name: matched[1],
+              size: 0,
+              status: "Closed",
+              assignee: ""
+            }
+          }else{
+            child = {
+              i: i+1,
+              cursor: i == cursor.row,
+              name: matched[1],
+              size: matched[3] ? Number(matched[3]) : 1,
+              status: matched[6] ? matched[6] : "Todo",
+              assignee: matched[8] ? matched[8] : "",
+            }
           }
 
           self.addMarker(child,i);
@@ -292,11 +307,15 @@ module.exports = {
       self.clearMarkers();
 
       children.forEach(function(child, i){
-        tempText.push(
-          child.name + delim + 
-          child.size + delim + 
-          child.status + delim + 
-          (child.assignee ? child.assignee : ""));
+        if (child.name.match(LineSeparatorReg)){
+          tempText.push(child.name)
+        }else{
+          tempText.push(
+            child.name + delim +
+              child.size + delim +
+              child.status + delim +
+              (child.assignee ? child.assignee : ""));
+        }
 
         if (child.cursor){
           cursor = i+1;

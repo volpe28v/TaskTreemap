@@ -111,9 +111,9 @@ socket.on('connect', function() {
 
 module.exports = {
   components: {
-    'task-treemap': taskTreemap, 
-    'task-textarea': taskTextarea, 
-    'burn-down': burnDown 
+    'task-treemap': taskTreemap,
+    'task-textarea': taskTextarea,
+    'burn-down': burnDown
   },
   data: function(){
     return {
