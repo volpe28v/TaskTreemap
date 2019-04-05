@@ -16,7 +16,7 @@ https://tasktreemap.herokuapp.com/?id=demo
 * 上部のアサイン名をタスクにドラッグするとアサイン可能
 * バーンダウンの「Apply to n sprints」をクリックすると Done → Closed に状態遷移する。
 
-* Alt + Click でレイアウト切り替え(3種類)
+* Alt + Click or Shift + Click でレイアウト切り替え(3種類)
 * [Status] <-> [assignee] ボタンでタスクのグルーピング表示切り替え
 * [Done] チェックボックスで Done の表示非表示切り替え
 
@@ -27,6 +27,8 @@ https://tasktreemap.herokuapp.com/?id=demo
 |タスク2|40|Doing|ふがさん|
 |タスク3|50|Done||
 |タスク4|60|||
+
+- `---` で区切り行
 
 ### バーンダウンチャートフォーマット
 |要素|説明|
