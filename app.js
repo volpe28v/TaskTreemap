@@ -15,6 +15,7 @@ program
 
 app.set('db_name', program.db_name || 'tasktreemap_db');
 app.set('port', program.port || process.env.PORT || 3000);
+app.set('force_ssl', program.forceSsl || process.env.FORCE_SSL === 'true');
 
 var mongo_builder = require('./lib/mongo_builder');
 var tasktreemap_db = require("./lib/tasktreemap_db");
@@ -47,10 +48,17 @@ function startServer(){
     });
   });
 
+  if (app.get('force_ssl')) {
+    app.get('*', function(req, res, next) {
+      if (req.recure || req.headers['x-forwarded-proto'] === 'https') {
+        next();
+      } else {
+        res.redirect('https://' + req.headers.host + req.url);
+      }
+    });
+  }
 
   server.listen(app.get('port'), function () {
     console.log('TaskTreeMap listening on port ' + app.get('port'));
   });
 }
-
-

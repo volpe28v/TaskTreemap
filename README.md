@@ -76,3 +76,7 @@ $ BASIC_AUTH_USER=user BASIC_AUTH_PASS=pass npm run start
 
 * BASIC_AUTH_USER ユーザ名
 * BASIC_AUTH_PASS パスワード
+
+### Heroku button
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+

@@ -1,0 +1,21 @@
+{
+  "name": "TaskTreemap",
+  "description": "View task size and progress in a treemaps.",
+  "repository": "https://github.com/volpe28v/TaskTreemap",
+  "keywords": ["node", "socket.io", "tasklist", "treemap"],
+  "addons": [
+    "mongolab"
+  ],
+  "env": {
+    "BASIC_AUTH_USER": {
+      "required": false
+    },
+    "BASIC_AUTH_PASS": {
+      "required": false
+    },
+    "FORCE_SSL": {
+      "required": false,
+      "value": "true"
+    }
+  }
+}
