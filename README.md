@@ -69,3 +69,10 @@ http://localhost:3000/?id=page_name
 
 page_name: 任意のページ名文字列
 
+### Basic認証
+```
+$ BASIC_AUTH_USER=user BASIC_AUTH_PASS=pass npm run start
+```
+
+* BASIC_AUTH_USER ユーザ名
+* BASIC_AUTH_PASS パスワード

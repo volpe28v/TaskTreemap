@@ -1,16 +1,10 @@
-var express = require('express');
-var app = express();
+var app = require('./lib/server');
 var server = require('http').createServer(app);
 var path = require('path');
-var bodyParser = require('body-parser');
 
 var io = require('socket.io').listen(server,{ 'destroy buffer size': Infinity });
 var index_socket = require('./lib/index_socket');
 index_socket.setup(io);
-
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
 
 var program = require('commander');
 program
@@ -36,9 +30,14 @@ Promise.all([
 });
 
 function startServer(){
+  app.get('/', function(req, res, app) {
+    console.log('/');
+    res.render('index',{});
+  });
+
   app.get('/list', function (req, res) {
-    var options = { root: path.join(__dirname, 'public') };
-    res.sendFile('list.html', options);
+    console.log('/list');
+    res.render('list',{});
   });
 
   app.get('/all_maps', function (req, res) {
