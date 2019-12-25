@@ -77,6 +77,9 @@ module.exports = {
       this.updateTasks();
     },
     line: function(){
+      var current_line= this.editor.selection.getCursor().row + 1;
+      if (current_line === this.line) return
+
       this.editor.gotoLine(this.line, this.beforeCursor.column);
       this.editor.focus();
     },
