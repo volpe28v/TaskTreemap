@@ -183,17 +183,18 @@ module.exports = {
     },
 
     judgeSepaMode: function(text){
-      if (text.match(/.+?\t/)){
+      if (text.match(/[^\s^\t]+?\t/)){
         return {
           mode: "tab",
           delim: "\t",
-          reg: /^([\s|\t]*-?\s*(\[[x|\s]?\]\s*)?)?([^\t]+)([\t]+([\d\.]+)(([\t]+(\w+))([\t]+([^\t]+))?)?)?/
+          reg: /^([\s|\t]*-?\s*(\[[x|\s]?\]\s*)?)?(([^\t]+)[\t]+([\d\.]+)([\t]+(.+))([\t]+(.+))|([^\t]+)[\t]+([\d\.]+)([\t]+([^\t]+))|(.+)[\t]+([\d\.]+)|([^\t]+))/
         };
       }else{
         return {
           mode: "space",
           delim: " ",
-          reg: /^([\s|\t]*-?\s*(\[[x|\s]?\]\s*)?)?(\S+)([ ]+([\d\.]+)(([ ]+(\S+))([ ]+(\S+))?)?)?/
+          // reg: /^([\s|\t]*-?\s*(\[[x|\s]?\]\s*)?)?(\S+)([ ]+([\d\.]+)(([ ]+(\S+))([ ]+(\S+))?)?)?/
+          reg: /^([\s|\t]*-?\s*(\[[x|\s]?\]\s*)?)?((.+)[ ]+([\d\.]+)([ ]+(.+))([ ]+(.+))|(.+)[ ]+([\d\.]+)([ ]+(.+))|(.+)[ ]+([\d\.]+)|(.+))/
         };
       }
     },
@@ -254,10 +255,10 @@ module.exports = {
               cursor: i == cursor.row,
               delim: sepaMode.delim,
               prefix: matched[1],
-              name: matched[3],
-              size: matched[5] ? Number(matched[5]) : 1,
-              status: matched[8] ? matched[8] : "Todo",
-              assignee: matched[10] ? matched[10] : "",
+              name: matched[4] || matched[10] || matched[14] || matched[16],
+              size: Number(matched[5] || matched[11] || matched[15] || 1),
+              status: matched[7] || matched[13] || 'Todo',
+              assignee: (matched[9] || '').trim(),
             }
           }
 
