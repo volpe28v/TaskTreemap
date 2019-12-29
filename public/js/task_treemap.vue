@@ -249,6 +249,7 @@ module.exports = {
       var status_id = 0;
       children.forEach(function(child){
         if (child.name.match(LineSeparatorReg)) return;
+        if (child.size === 0) return;
 
         var assignee = child.assignee != null ? child.assignee : "";
 
