@@ -183,17 +183,17 @@ module.exports = {
     },
 
     judgeSepaMode: function(text){
-      if (text.match(/\t/)){
+      if (text.match(/.+?\t/)){
         return {
           mode: "tab",
           delim: "\t",
-          reg: /^([^\t]+)([\t]+([\d\.]+)(([\t]+(\w+))([\t]+([^\t]+))?)?)?/
+          reg: /^([\s|\t]*-?\s*(\[[x|\s]?\]\s*)?)?([^\t]+)([\t]+([\d\.]+)(([\t]+(\w+))([\t]+([^\t]+))?)?)?/
         };
       }else{
         return {
           mode: "space",
           delim: " ",
-          reg: /^(\S+)([ ]+([\d\.]+)(([ ]+(\S+))([ ]+(\S+))?)?)?/
+          reg: /^([\s|\t]*-?\s*(\[[x|\s]?\]\s*)?)?(\S+)([ ]+([\d\.]+)(([ ]+(\S+))([ ]+(\S+))?)?)?/
         };
       }
     },
@@ -227,23 +227,23 @@ module.exports = {
     updateText: function(){
       var self = this;
 
-      // タブ区切りを自動認識
-      self.sepaMode = self.judgeSepaMode(self.text);
-
       var cursor = self.editor.selection.getCursor();
 
       self.clearMarkers();
       var children = self.text.split(/\r\n|\r|\n/)
         .map(function(row, i){
-          var matched = row.match(self.sepaMode.reg);
-          if (matched == null){ return null; }
+          var sepaMode = self.judgeSepaMode(row);
+          var matched = row.match(sepaMode.reg);
+          if (matched == null || matched[3] == null){ return null; }
 
           var child = null;
-          if (matched[1].match(LineSeparatorReg)){
+          if (matched[0].match(LineSeparatorReg)){
             child = {
               i: i+1,
               cursor: i == cursor.row,
-              name: matched[1],
+              delim: sepaMode.delim,
+              prefix: '',
+              name: matched[0],
               size: 0,
               status: "Closed",
               assignee: ""
@@ -252,14 +252,19 @@ module.exports = {
             child = {
               i: i+1,
               cursor: i == cursor.row,
-              name: matched[1],
-              size: matched[3] ? Number(matched[3]) : 1,
-              status: matched[6] ? matched[6] : "Todo",
-              assignee: matched[8] ? matched[8] : "",
+              delim: sepaMode.delim,
+              prefix: matched[1],
+              name: matched[3],
+              size: matched[5] ? Number(matched[5]) : 1,
+              status: matched[8] ? matched[8] : "Todo",
+              assignee: matched[10] ? matched[10] : "",
             }
           }
 
           self.addMarker(child,i);
+          if (i == cursor.row){
+            self.sepaMode = sepaMode;
+          }
 
           return child;
         })
@@ -302,7 +307,6 @@ module.exports = {
     updateTasks: function(){
       var self = this;
 
-      var delim = self.sepaMode.delim;
       var children = self.tasks.children;
       var tempText = [];
       var cursor = -1;
@@ -313,8 +317,10 @@ module.exports = {
         if (child.name.match(LineSeparatorReg)){
           tempText.push(child.name)
         }else{
+          var delim = child.delim;
+          var prefix = child.prefix ? child.prefix : '';
           tempText.push(
-            child.name + delim +
+            prefix + child.name + delim +
               child.size + delim +
               child.status + delim +
               (child.assignee ? child.assignee : ""));
