@@ -227,7 +227,6 @@ module.exports = {
 
     updateText: function(){
       var self = this;
-
       var cursor = self.editor.selection.getCursor();
 
       self.clearMarkers();
@@ -250,14 +249,19 @@ module.exports = {
               assignee: ""
             }
           }else{
+            var prefix = matched[1];
+            var status = 'Todo';
+            if (prefix != null && prefix.match(/\[x\]/)){
+              status = 'Done';
+            }
             child = {
               i: i+1,
               cursor: i == cursor.row,
               delim: sepaMode.delim,
-              prefix: matched[1],
+              prefix: prefix,
               name: matched[4] || matched[10] || matched[14] || matched[16],
               size: Number(matched[5] || matched[11] || matched[15] || 1),
-              status: matched[7] || matched[13] || 'Todo',
+              status: matched[7] || matched[13] || status,
               assignee: (matched[9] || '').trim(),
             }
           }
