@@ -324,6 +324,15 @@ module.exports = {
         }else{
           var delim = child.delim;
           var prefix = child.prefix ? child.prefix : '';
+          if (child.status.match(/(Done|Closed)/i)){
+            prefix = prefix.replace(/\[\s?\]/, function(){
+              return '[x]';
+            })
+          }else{
+            prefix = prefix.replace(/\[\x\]/, function(){
+              return '[ ]';
+            })
+          }
           tempText.push(
             prefix + child.name + delim +
               child.size + delim +
