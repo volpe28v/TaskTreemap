@@ -203,8 +203,8 @@ module.exports = {
       var self = this;
 
       var doing = children.filter(function(child){ return child.status != null && child.status.match(/Doing/i); });
-      var done = children.filter(function(child){ return child.status != null && child.status.match(/(Done|Closed)/i); });
-      var todo = children.filter(function(child){ return child.status == null || !child.status.match(/(Done|Closed)/i); });
+      var done = children.filter(function(child){ return child.status != null && child.status.match(/(Done|Closed|Archive)/i); });
+      var todo = children.filter(function(child){ return child.status == null || !child.status.match(/(Done|Closed|Archive)/i); });
 
       self.count = children.length;
       self.todo_count = todo.length;
@@ -296,7 +296,7 @@ module.exports = {
         self.markerIds.push(self.editor.session.addMarker(new Range(i, 0, i, 100), "waiting-text", "fullLine"));
       }else if (child.status != null && child.status.match(/Done/i)){
         self.markerIds.push(self.editor.session.addMarker(new Range(i, 0, i, 100), "done-text", "fullLine"));
-      }else if (child.status == null || !child.status.match(/(Done|Closed)/i)){
+      }else if (child.status == null || !child.status.match(/(Done|Closed|Archive)/i)){
         self.markerIds.push(self.editor.session.addMarker(new Range(i, 0, i, 100), "todo-text", "fullLine"));
       }
     },
@@ -324,7 +324,7 @@ module.exports = {
         }else{
           var delim = child.delim;
           var prefix = child.prefix ? child.prefix : '';
-          if (child.status.match(/(Done|Closed)/i)){
+          if (child.status.match(/(Done|Closed|Archive)/i)){
             prefix = prefix.replace(/\[\s?\]/, function(){
               return '[x]';
             })

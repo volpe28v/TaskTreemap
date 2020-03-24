@@ -212,7 +212,7 @@ module.exports = {
       if (status.match(/Done/i)){ return "#888888"; }
       if (status.match(/Doing/i)){ return "#149bdf"; }
       if (status.match(/Waiting/i)){ return "#945F4F"; }
-      if (status.match(/Closed/i)){ return "#444444"; }
+      if (status.match(/Closed|Archive/i)){ return "#444444"; }
       return todo_color; //Todo or other
     },
 
@@ -227,7 +227,7 @@ module.exports = {
       if (status == null){ return "Doing"; }
       if (status.match(/Done/i)){ return "Todo"; }
       if (status.match(/Doing/i)){ return "Done"; }
-      if (status.match(/Closed/i)){ return "Closed"; }
+      if (status.match(/Closed|Archive/i)){ return "Closed"; }
       return "Doing";
     },
 
@@ -260,6 +260,9 @@ module.exports = {
         }
 
         var status = child.status.toLowerCase();
+        if (status == 'archive') {
+          status = 'closed'
+        }
         if (status_hash[status] == null){
           status_hash[status] = { id: ++status_id, children: [child]};
         }else{
@@ -413,7 +416,7 @@ module.exports = {
             "name": key,
             "children": target_hash[key].children
             .filter(function(child){
-              if (!self.showClosed && child.status.match(/(Closed)/i)){
+              if (!self.showClosed && child.status.match(/Closed|Archive/i)){
                 return false;
               }else if (self.selectedUser != null && self.selectedUser.name != child.assignee) {
                 return false;
@@ -450,7 +453,7 @@ module.exports = {
         }, interval);
       });
     },
-    
+
     selectUser: function(user){
       var self = this;
       if (self.selectedUser != null && self.selectedUser.name == user.name){
