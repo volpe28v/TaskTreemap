@@ -11,7 +11,7 @@
     "cross-env": "^5.2.1",
     "css-loader": "^2.1.1",
     "ejs": "^2.7.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "file-loader": "^3.0.1",
     "moment": "^2.24.0",
     "mongodb": "^3.6.0",
