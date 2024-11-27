@@ -41,5 +41,9 @@
   "bugs": {
     "url": "https://github.com/volpe28v/TaskTreemap/issues"
   },
-  "homepage": "https://github.com/volpe28v/TaskTreemap#readme"
+  "homepage": "https://github.com/volpe28v/TaskTreemap#readme",
+  "engines": {
+    "node": "10.13.0",
+    "npm": "6.4.1"
+  }
 }
